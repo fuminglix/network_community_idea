@@ -55,4 +55,18 @@ public class ArticleController {
     public ResponseResult getCategoryList(){
         return categoryService.getCategoryList();
     }
+
+    /**
+     * 获取当前用户的所有文章
+     * @param pageNum
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    @GetMapping("/manage/articleList")
+    public ResponseResult getMyArticle(@NotNull(message = "pageNum不能为空") Integer pageNum,
+                                       @NotNull(message = "pageSize不能为空") Integer pageSize,
+                                       @NotNull(message = "userId不能为空") Long userId){
+        return articleService.getMyArticle(pageNum,pageSize,userId);
+    }
 }

@@ -169,4 +169,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         return ResponseResult.okResult();
     }
+
+    /**
+     * 获取当前用户的所有文章
+     * @param pageNum
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    @Override
+    public ResponseResult getMyArticle(Integer pageNum, Integer pageSize, Long userId) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Article::getCreateBy,userId);
+        Page<Article> page = new Page<>(pageNum, pageSize);
+        page(page,wrapper);
+        return ResponseResult.okResult(new PageVo(page.getRecords(),page.getTotal()));
+    }
 }

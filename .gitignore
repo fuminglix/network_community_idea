@@ -1,0 +1,7 @@
+# Project exclude paths
+/community-article/target/
+/community-commons/target/
+/community-gateway/target/
+/community-postBar/target/
+/community-upload/target/
+/community-user/target/
