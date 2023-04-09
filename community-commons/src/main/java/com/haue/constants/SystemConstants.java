@@ -3,25 +3,29 @@ package com.haue.constants;
 public class SystemConstants {
 
     /**
+     * 默认状态
+     */
+    public static final String DEFAULT_STATUS="-1";
+    /**
      * 文章是正常发布状态
      */
-    public static final int ARTICLE_STATUS_NORMAL=0;
+    public static final String ARTICLE_STATUS_NORMAL="0";
     /**
      * 文章是草稿
      */
-    public static final int ARTICLE_STATUS_DRAFT=1;
+    public static final String ARTICLE_STATUS_DRAFT="1";
     /**
      * 文章正在审核中
      */
-    public static final int ARTICLE_STATUS_REVIEW=2;
+    public static final String ARTICLE_STATUS_REVIEW="2";
     /**
      * 文章未通过审核
      */
-    public static final int ARTICLE_STATUS_REVIEW_FAILED=3;
+    public static final String ARTICLE_STATUS_REVIEW_FAILED="3";
     /**
      * 定时发布文章
      */
-    public static final int ARTICLE_STATUS_SCHEDULED=4;
+    public static final String ARTICLE_STATUS_SCHEDULED="4";
     /**
      * 分类是正常显示
      */

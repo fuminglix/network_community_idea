@@ -3,6 +3,7 @@ package com.haue.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haue.pojo.entity.Article;
 import com.haue.pojo.params.ArticleParam;
+import com.haue.pojo.params.GetMyArticleParam;
 import com.haue.utils.ResponseResult;
 
 
@@ -18,9 +19,11 @@ public interface ArticleService extends IService<Article> {
 
     ResponseResult getHotArticleList();
 
-    ResponseResult getArticleById(Long id);
+    ResponseResult getArticleById(Long id,Boolean flag);
 
     ResponseResult addArticle(ArticleParam articleParam);
 
-    ResponseResult getMyArticle(Integer pageNum, Integer pageSize, Long userId);
+    ResponseResult getMyArticle(GetMyArticleParam myArticleParam);
+
+    ResponseResult updateArticle(ArticleParam articleParam);
 }

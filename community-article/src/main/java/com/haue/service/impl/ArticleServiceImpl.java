@@ -13,10 +13,8 @@ import com.haue.pojo.entity.Article;
 import com.haue.pojo.entity.ArticleTag;
 import com.haue.pojo.entity.Tag;
 import com.haue.pojo.params.ArticleParam;
-import com.haue.pojo.vo.ArticleDetailVo;
-import com.haue.pojo.vo.ArticleListVo;
-import com.haue.pojo.vo.HotArticleVo;
-import com.haue.pojo.vo.PageVo;
+import com.haue.pojo.params.GetMyArticleParam;
+import com.haue.pojo.vo.*;
 import com.haue.service.ArticleService;
 import com.haue.service.ArticleTagService;
 import com.haue.service.CategoryService;
@@ -26,6 +24,7 @@ import com.haue.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +68,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getArticleList(Integer pageNum, Integer pageSize, Long categoryId) {
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Article::getDelFlag, SystemConstants.ARTICLE_STATUS_NORMAL)
+                .eq(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL)
                 .eq(Objects.nonNull(categoryId) && categoryId>0,Article::getCategoryId,categoryId)
                 .orderByDesc(Article::getIsTop);
         Page<Article> page = new Page<>(pageNum,pageSize);
@@ -106,7 +106,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @return ArticleDetailVo封装的数据
      */
     @Override
-    public ResponseResult getArticleById(Long id) {
+    public ResponseResult getArticleById(Long id,Boolean flag) {
 
         Article article = getById(id);
         article.setCategoryName(categoryService.getById(article.getCategoryId()).getName());
@@ -120,6 +120,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                     .distinct()
                     .collect(Collectors.toList());
             article.setTags(tagMapper.selectBatchIds(tags));
+        }
+        if (flag){
+            return ResponseResult.okResult(article);
         }
         return ResponseResult.okResult(BeanCopyUtils.copyBean(article, ArticleDetailVo.class));
     }
@@ -136,29 +139,29 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         save(article);
 //        添加文章标签
         if (articleParam.getTags().size() > 0){
-            ArrayList<ArticleTag> articleTags = new ArrayList<>();
-
-            List<Tag> tagList = BeanCopyUtils.copyBeanList(articleParam.getTags(), Tag.class);
-            for ( Tag tag : tagList){
-                ArticleTag articleTag = new ArticleTag( article.getId(),0L);
-                LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(Tag::getTagName,tag.getTagName());
-                Tag exist = tagService.getOne(wrapper);
-//                Tag exist = tagMapper.selectOne(wrapper);
-//                判断tag表中是否已存在该标签
-                if (exist != null){
-//                    若存在复用该id
-                    articleTag.setTagId(exist.getId());
-                }else{
-//                    若不存在将该标签添加到tag表，然后再向articleTag的tagId注入值
-                    tagService.save(tag);
-                    articleTag.setTagId(tag.getId());
-                }
-                articleTags.add(articleTag);
-            }
-//            将articleTag添加到表中
-            articleTagService.saveBatch(articleTags);
-            return ResponseResult.okResult();
+            return addAndUpdateTags(article,articleParam);
+//            ArrayList<ArticleTag> articleTags = new ArrayList<>();
+//            List<Tag> tagList = BeanCopyUtils.copyBeanList(articleParam.getTags(), Tag.class);
+//            for ( Tag tag : tagList){
+//                ArticleTag articleTag = new ArticleTag( article.getId(),0L);
+//                LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+//                wrapper.eq(Tag::getTagName,tag.getTagName());
+//                Tag exist = tagService.getOne(wrapper);
+////                Tag exist = tagMapper.selectOne(wrapper);
+////                判断tag表中是否已存在该标签
+//                if (exist != null){
+////                    若存在复用该id
+//                    articleTag.setTagId(exist.getId());
+//                }else{
+////                    若不存在将该标签添加到tag表，然后再向articleTag的tagId注入值
+//                    tagService.save(tag);
+//                    articleTag.setTagId(tag.getId());
+//                }
+//                articleTags.add(articleTag);
+//            }
+////            将articleTag添加到表中
+//            articleTagService.saveBatch(articleTags);
+//            return ResponseResult.okResult();
 //            List<ArticleTag> articleTags = articleParam.getTags().stream()
 //                    .map(tag -> new ArticleTag(article.getId(), tagMapper.selectOne(new LambdaQueryWrapper<Tag>().eq(Tag::getTagName, tag.getTagName())).getId()))
 //
@@ -172,17 +175,89 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     /**
      * 获取当前用户的所有文章
-     * @param pageNum
-     * @param pageSize
-     * @param userId
+     * @param param
      * @return
      */
     @Override
-    public ResponseResult getMyArticle(Integer pageNum, Integer pageSize, Long userId) {
+    public ResponseResult getMyArticle(GetMyArticleParam param) {
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Article::getCreateBy,userId);
-        Page<Article> page = new Page<>(pageNum, pageSize);
+        wrapper.eq(Article::getCreateBy,param.getUserId())
+                .notIn(Objects.nonNull(param.getStatus()) && SystemConstants.DEFAULT_STATUS.equals(param.getStatus()),Article::getStatus,SystemConstants.ARTICLE_STATUS_DRAFT)
+                .eq(Objects.nonNull(param.getStatus()) && SystemConstants.ARTICLE_STATUS_DRAFT.equals(param.getStatus()),Article::getStatus,param.getStatus())
+                .eq(Objects.nonNull(param.getStatus()) && !SystemConstants.DEFAULT_STATUS.equals(param.getStatus()) && !SystemConstants.ARTICLE_STATUS_DRAFT.equals(param.getStatus()),Article::getStatus,param.getStatus())
+                .orderBy(Objects.nonNull(param.getOrderBy()) && SystemConstants.ARTICLE_STATUS_DRAFT.equals(param.getOrderBy()),false,Article::getCreateTime)
+                .orderBy(Objects.nonNull(param.getOrderBy()) && SystemConstants.ARTICLE_STATUS_REVIEW.equals(param.getOrderBy()),false,Article::getViewCount)
+                .orderBy(Objects.nonNull(param.getOrderBy()) && SystemConstants.ARTICLE_STATUS_REVIEW_FAILED.equals(param.getOrderBy()),false,Article::getCommentCount)
+                .orderBy(Objects.nonNull(param.getOrderBy()) && SystemConstants.ARTICLE_STATUS_SCHEDULED.equals(param.getOrderBy()),false,Article::getCollectCount)
+                .like(Objects.nonNull(param.getSearch()),Article::getTitle,param.getSearch());
+        Page<Article> page = new Page<>(param.getPageNum(),param.getPageSize());
         page(page,wrapper);
-        return ResponseResult.okResult(new PageVo(page.getRecords(),page.getTotal()));
+        List<MyArticleVo> myArticleVos = BeanCopyUtils.copyBeanList(page.getRecords(), MyArticleVo.class);
+        return ResponseResult.okResult(new PageVo(myArticleVos,page.getTotal()));
+    }
+
+    /**
+     * 更新文章
+     * @param articleParam
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseResult updateArticle(ArticleParam articleParam) {
+        Article article = BeanCopyUtils.copyBean(articleParam, Article.class);
+        updateById(article);
+
+        //        添加文章标签
+        if (articleParam.getTags().size() > 0){
+            return addAndUpdateTags(article,articleParam);
+        }
+        return ResponseResult.okResult();
+    }
+
+    /**
+     * 添加标签
+     * @param article
+     * @param articleParam
+     * @return
+     */
+    public ResponseResult addAndUpdateTags(Article article,ArticleParam articleParam){
+        ArrayList<ArticleTag> articleTags = new ArrayList<>();
+        List<Tag> tagList = BeanCopyUtils.copyBeanList(articleParam.getTags(), Tag.class);
+        for ( Tag tag : tagList){
+            ArticleTag articleTag = new ArticleTag( article.getId(),0L);
+            LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Tag::getTagName,tag.getTagName());
+            Tag exist = tagService.getOne(wrapper);
+//                判断tag表中是否已存在该标签
+            if (exist != null){
+//                    若存在复用该id
+                articleTag.setTagId(exist.getId());
+            }else{
+//                    若不存在将该标签添加到tag表，然后再向articleTag的tagId注入值
+                tagService.save(tag);
+                articleTag.setTagId(tag.getId());
+            }
+            articleTags.add(articleTag);
+        }
+//            将articleTag添加到表中
+        ArrayList<ArticleTag> articleTagList = new ArrayList<>();
+        for ( ArticleTag articleTag : articleTags ) {
+            LambdaQueryWrapper<ArticleTag> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(ArticleTag::getArticleId,articleTag.getArticleId())
+                    .eq(ArticleTag::getTagId,articleTag.getTagId());
+            ArticleTag tag = articleTagService.getOne(wrapper);
+            if (tag == null){
+                articleTagList.add(articleTag);
+            }
+        }
+//        LambdaQueryWrapper<ArticleTag> wrapper = new LambdaQueryWrapper<>();
+//        List<ArticleTag> articleTagList = articleTags.stream()
+//                .filter(articleTag -> articleTagService.getOne(wrapper
+//                        .eq(ArticleTag::getArticleId,articleTag.getArticleId()).eq(ArticleTag::getTagId,articleTag.getTagId())) == null)
+//                .collect(Collectors.toList());
+        if (articleTagList.size()>0){
+            articleTagService.saveBatch(articleTagList);
+        }
+        return ResponseResult.okResult();
     }
 }
