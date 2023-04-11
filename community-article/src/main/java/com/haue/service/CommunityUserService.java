@@ -1,7 +1,7 @@
 package com.haue.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.haue.entity.CommunityUser;
+import com.haue.pojo.entity.CommunityUser;
 
 
 /**

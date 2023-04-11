@@ -1,4 +1,4 @@
-package com.haue.entity;
+package com.haue.pojo.entity;
 
 
 import java.io.Serializable;

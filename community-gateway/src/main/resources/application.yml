@@ -15,8 +15,8 @@ spring:
           uri: lb://upload-service
           predicates:
             - Path=/upload/**  # 访问upload路径转发用户服务
-        - id: postBar-service
-          uri: lb://postBar-service
+        - id: article-service
+          uri: lb://article-service
           predicates:
             - Path=/community/**  # 访问upload路径转发用户服务
 #        - id: product-service # 此名称随意定义

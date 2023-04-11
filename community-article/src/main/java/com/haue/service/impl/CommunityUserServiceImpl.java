@@ -1,8 +1,8 @@
 package com.haue.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.haue.entity.CommunityUser;
 import com.haue.mapper.CommunityUserMapper;
+import com.haue.pojo.entity.CommunityUser;
 import com.haue.service.CommunityUserService;
 import org.springframework.stereotype.Service;
 

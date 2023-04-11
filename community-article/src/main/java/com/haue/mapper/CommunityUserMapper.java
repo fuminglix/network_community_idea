@@ -1,7 +1,7 @@
 package com.haue.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.haue.entity.CommunityUser;
+import com.haue.pojo.entity.CommunityUser;
 import org.springframework.stereotype.Repository;
 
 /**

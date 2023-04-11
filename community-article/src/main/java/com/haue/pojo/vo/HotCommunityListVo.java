@@ -1,6 +1,5 @@
 package com.haue.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class HotCommentListVo {
+public class HotCommunityListVo {
     //社区id
     private Long id;
 
