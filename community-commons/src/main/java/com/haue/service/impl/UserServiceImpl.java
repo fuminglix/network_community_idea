@@ -6,6 +6,7 @@ import com.haue.enums.AppHttpCodeEnum;
 import com.haue.exception.SystemException;
 import com.haue.mapper.UserMapper;
 import com.haue.pojo.entity.User;
+import com.haue.pojo.params.SearchUserParam;
 import com.haue.pojo.params.UserRegisterParams;
 import com.haue.pojo.vo.AuthorInfoVo;
 import com.haue.service.UserService;
@@ -15,6 +16,10 @@ import com.haue.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 网站用户表(User)表服务实现类
@@ -50,6 +55,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         AuthorInfoVo infoVo = BeanCopyUtils.copyBean(user, AuthorInfoVo.class);
         infoVo.setUserTotal(userTotalService.getById(id));
         return ResponseResult.okResult(infoVo);
+    }
+
+    /**
+     * 搜索用户
+     * @param param
+     * @return
+     */
+    @Override
+    public ResponseResult searchUser(SearchUserParam param) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Objects.nonNull(param.getSearch()),User::getUserName,param.getSearch());
+        List<User> userList = list(wrapper).stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return ResponseResult.okResult(userList);
     }
 
     /**

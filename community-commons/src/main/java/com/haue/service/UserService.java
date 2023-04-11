@@ -2,6 +2,7 @@ package com.haue.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haue.pojo.entity.User;
+import com.haue.pojo.params.SearchUserParam;
 import com.haue.pojo.params.UserRegisterParams;
 import com.haue.utils.ResponseResult;
 
@@ -17,4 +18,6 @@ public interface UserService extends IService<User> {
     ResponseResult register(UserRegisterParams userParams);
 
     ResponseResult getAuthorInfo(Long id);
+
+    ResponseResult searchUser(SearchUserParam param);
 }

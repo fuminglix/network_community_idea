@@ -4,6 +4,7 @@ package com.haue.controller;
 import com.haue.enums.AppHttpCodeEnum;
 import com.haue.pojo.params.ArticleParam;
 import com.haue.pojo.params.GetMyArticleParam;
+import com.haue.pojo.params.SearchArticleParam;
 import com.haue.service.ArticleService;
 import com.haue.service.CategoryService;
 import com.haue.utils.ResponseResult;
@@ -97,6 +98,20 @@ public class ArticleController {
     @GetMapping("/getUpdateArticle/{articleId}")
     public ResponseResult getUpdateArticle(@PathVariable("articleId") @NotNull(message = "文章id不能为空！") Long id){
         return articleService.getArticleById(id,true);
+    }
+
+    /**
+     * 搜索文章
+     * @param param
+     * @param result
+     * @return
+     */
+    @GetMapping("/search")
+    public ResponseResult searchArticle(SearchArticleParam param,BindingResult result){
+        if (result.hasErrors()){
+            return ResponseResult.errorResult(600,result.toString());
+        }
+        return articleService.searchArticle(param);
     }
 
     /**

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.haue.pojo.entity.Article;
 import com.haue.pojo.params.ArticleParam;
 import com.haue.pojo.params.GetMyArticleParam;
+import com.haue.pojo.params.SearchArticleParam;
 import com.haue.utils.ResponseResult;
 
 
@@ -26,4 +27,6 @@ public interface ArticleService extends IService<Article> {
     ResponseResult getMyArticle(GetMyArticleParam myArticleParam);
 
     ResponseResult updateArticle(ArticleParam articleParam);
+
+    ResponseResult searchArticle(SearchArticleParam param);
 }

@@ -14,6 +14,7 @@ import com.haue.pojo.entity.ArticleTag;
 import com.haue.pojo.entity.Tag;
 import com.haue.pojo.params.ArticleParam;
 import com.haue.pojo.params.GetMyArticleParam;
+import com.haue.pojo.params.SearchArticleParam;
 import com.haue.pojo.vo.*;
 import com.haue.service.ArticleService;
 import com.haue.service.ArticleTagService;
@@ -212,6 +213,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             return addAndUpdateTags(article,articleParam);
         }
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 搜索文章
+     * @param param
+     * @return
+     */
+    @Override
+    public ResponseResult searchArticle(SearchArticleParam param) {
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Objects.nonNull(param.getSearch()),Article::getTitle,param.getSearch());
+        List<Article> articleList = list(wrapper).stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return ResponseResult.okResult(articleList);
     }
 
     /**
