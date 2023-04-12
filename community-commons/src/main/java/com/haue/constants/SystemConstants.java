@@ -64,4 +64,8 @@ public class SystemConstants {
      * myCommunityList获取数据的条数
      */
     public static final int MY_COMMUNITY_LIST_PAGE_SIZE = 6;
+    /**
+     * 动态内容是转发内容
+     */
+    public static final String IS_REF="1";
 }

@@ -14,7 +14,7 @@ import com.haue.utils.ResponseResult;
  */
 public interface CommentService extends IService<Comment> {
 
-    ResponseResult commentList(String commentType, GetCommentParam commentParam);
+    ResponseResult commentList(GetCommentParam commentParam);
 
     ResponseResult addComment(Comment comment);
 }

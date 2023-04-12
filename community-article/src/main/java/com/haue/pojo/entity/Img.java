@@ -1,6 +1,5 @@
 package com.haue.pojo.entity;
 
-import java.util.Date;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -11,37 +10,26 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 /**
- * 文章分类表(Category)表实体类
+ * (Img)表实体类
  *
  * @author makejava
- * @since 2023-03-28 16:37:11
+ * @since 2023-04-12 16:49:17
  */
 @SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@TableName("nc_category")
-public class Category implements Serializable {
+@TableName("nc_img")
+public class Img implements Serializable {
+    //图片id
     @TableId
     private Long id;
 
-    //分类名
-    private String name;
-    //父分类id，如果没有父分类为-1
-    private Long pid;
-    //描述
-    private String description;
-    //状态0:正常,1禁用
-    private String status;
-    
-    private Long createBy;
-    
-    private Date createTime;
-    
-    private Long updateBy;
-    
-    private Date updateTime;
+    //动态id
+    private Long activityId;
+    //图片地址
+    private String url;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
 }

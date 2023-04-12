@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -17,4 +18,6 @@ public class GetCommentParam {
     private Integer pageNum;
     @NotNull
     private Integer pageSize;
+    @NotBlank
+    private String type;
 }

@@ -33,7 +33,7 @@ public class CommentController {
         if(result.hasErrors()){
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAMS_NOT_NULL);
         }
-        return commentService.commentList(SystemConstants.ARTICLE_COMMENT,commentParam);
+        return commentService.commentList(commentParam);
     }
 
     @PostMapping

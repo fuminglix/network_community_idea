@@ -19,5 +19,5 @@ public interface CommunityService extends IService<Community> {
 
     ResponseResult getRecommendCommunity(Integer pageNum, Integer pageSize);
 
-    ResponseResult getCommunityInfo(Integer pageNum, Integer pageSize, Integer id);
+    ResponseResult getCommunityInfo(Integer pageNum, Integer pageSize, Long id);
 }

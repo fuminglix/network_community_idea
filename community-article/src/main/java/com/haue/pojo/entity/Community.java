@@ -5,6 +5,7 @@ import java.util.Date;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -19,12 +20,12 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @TableName("nc_community")
 public class Community implements Serializable {
     //社区id
     @TableId
     private Long id;
-
     //社区名
     private String communityName;
     //社区头像
@@ -41,4 +42,6 @@ public class Community implements Serializable {
     private Integer delFlag;
     //社区活跃度
     private Float activity;
+    //社区简介
+    private String description;
 }

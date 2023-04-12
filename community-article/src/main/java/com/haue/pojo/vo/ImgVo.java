@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecommendCommunityVo {
+public class ImgVo {
 
-    private MyCommunityListVo community;
-
-    private RecommendArticleVo article;
-
+    //图片地址
+    private String url;
 }

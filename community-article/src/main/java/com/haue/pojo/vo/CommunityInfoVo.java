@@ -1,5 +1,6 @@
 package com.haue.pojo.vo;
 
+import com.haue.pojo.entity.ActivityContent;
 import com.haue.pojo.entity.Community;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,5 +15,5 @@ public class CommunityInfoVo {
 
     private Community community;
 
-    private List<ArticleListVo> articleListVos;
+    private List<ActivityContentVo> activityContents;
 }

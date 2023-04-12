@@ -54,11 +54,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 //        return ResponseResult.okResult(new PageVo(commentVoList,page.getTotal()));
 //    }
     @Override
-    public ResponseResult commentList(String commentType, GetCommentParam commentParam) {
+    public ResponseResult commentList(GetCommentParam commentParam) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(commentType),Comment::getArticleId,commentParam.getArticleId())
+        queryWrapper.eq(Comment::getArticleId,commentParam.getArticleId())
                 .eq(Comment::getRootId,-1)
-                .eq(Comment::getType,commentType)
+                .eq(Comment::getType,commentParam.getType())
                 .orderByAsc(Comment::getCreateTime);
 
         Page<Comment> page = new Page<>(commentParam.getPageNum(),commentParam.getPageSize());

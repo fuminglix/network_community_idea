@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -23,6 +24,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Accessors(chain = true) //用于指定实体类的set方法的返回值类型为该类本身
 @TableName("nc_article")
 public class Article implements Serializable {
@@ -81,6 +83,10 @@ public class Article implements Serializable {
     private Date updateTime;
     //定时发布时间
     private Date scheduled;
+    //删除标志（0代表未删除，1代表已删除）
+    private String isActivity;
+    //动态id
+    private Long activityId;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
 }

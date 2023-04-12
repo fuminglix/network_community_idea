@@ -55,12 +55,12 @@ public class CommunityController {
      * 获取当前社区详情
      * @param pageNum
      * @param pageSize
-     * @param id
+     * @param communityId
      * @return
      */
     @GetMapping("/CommunityInfo")
-    public ResponseResult getCommunityInfo(@NotNull Integer pageNum ,@NotNull Integer pageSize,@NotNull Integer id){
-        return communityService.getCommunityInfo(pageNum,pageSize,id);
+    public ResponseResult getCommunityInfo(@NotNull Integer pageNum ,@NotNull Integer pageSize,@NotNull Long communityId){
+        return communityService.getCommunityInfo(pageNum,pageSize,communityId);
     }
 
 }
