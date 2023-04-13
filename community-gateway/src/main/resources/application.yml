@@ -18,7 +18,11 @@ spring:
         - id: article-service
           uri: lb://article-service
           predicates:
-            - Path=/community/**  # 访问upload路径转发用户服务
+            - Path=/community/**  # 访问community路径转发用户服务
+        - id: article-service
+          uri: lb://article-service
+          predicates:
+            - Path=/activity/**  # 访问activity路径转发用户服务
 #        - id: product-service # 此名称随意定义
 #          uri: lb://product-service #使用负载均衡,调用服务名,这是服务名
 #          predicates:

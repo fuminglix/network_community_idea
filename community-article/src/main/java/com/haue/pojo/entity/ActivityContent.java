@@ -4,6 +4,7 @@ import java.util.Date;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.haue.pojo.vo.AuthorInfoVo;
 import com.haue.pojo.vo.RecommendArticleVo;
@@ -35,19 +36,22 @@ public class ActivityContent implements Serializable {
 
     //动态内容
     private String content;
-    //转发标志（0代表非转发 1转发）
+    //转发标志（0代表非转发 1转发文章 2转发动态）
     private String isRef;
-    //转发的文章id
+    //转发的文章或者动态id
     private Long refId;
     //转发时添加的内容
     private String dispatchContent;
-    //创建用户id
+    @TableField(fill = FieldFill.INSERT)
     private Long createBy;
     //创建时间
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
-    //更新用户id
+    //更新人
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
     //更新时间
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;

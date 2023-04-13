@@ -34,4 +34,5 @@ public class RecommendArticleVo {
     private Date createTime;
     @TableField(exist = false)
     private AuthorInfoVo user;
+    private ActivityContentVo activityContentVo;
 }

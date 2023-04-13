@@ -1,7 +1,5 @@
 package com.haue.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.haue.pojo.entity.Img;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class ActivityContentVo {
+public class RefActivityContentVo {
 
     //动态id
     private Long id;
@@ -33,12 +31,6 @@ public class ActivityContentVo {
     private Date createTime;
     //社区id
     private Long communityId;
-    //转发数
-    private Long relayCount;
-    //评论数
-    private Long commentCount;
-    //点赞数
-    private Long loveCount;
     //动态图片
     private List<String> contentImg;
     //转发的文章信息

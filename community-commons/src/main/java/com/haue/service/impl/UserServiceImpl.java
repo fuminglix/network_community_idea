@@ -1,14 +1,22 @@
 package com.haue.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.haue.constants.SystemConstants;
 import com.haue.enums.AppHttpCodeEnum;
 import com.haue.exception.SystemException;
 import com.haue.mapper.UserMapper;
+import com.haue.pojo.entity.RegardFansTotal;
 import com.haue.pojo.entity.User;
+import com.haue.pojo.entity.UserTotal;
 import com.haue.pojo.params.SearchUserParam;
 import com.haue.pojo.params.UserRegisterParams;
 import com.haue.pojo.vo.AuthorInfoVo;
+import com.haue.pojo.vo.PageVo;
+import com.haue.pojo.vo.UserActivityInfoVo;
+import com.haue.pojo.vo.UserActivityRegardListVo;
+import com.haue.service.RegardFansTotalService;
 import com.haue.service.UserService;
 import com.haue.service.UserTotalService;
 import com.haue.utils.BeanCopyUtils;
@@ -35,6 +43,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Autowired
     private UserTotalService userTotalService;
+
+    @Autowired
+    private RegardFansTotalService regardFansTotalService;
+
+
     @Override
     public ResponseResult register(UserRegisterParams userParams) {
         User user = BeanCopyUtils.copyBean(userParams, User.class);
@@ -70,6 +83,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .distinct()
                 .collect(Collectors.toList());
         return ResponseResult.okResult(userList);
+    }
+
+    /**
+     * 获取当前用户的动态信息
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseResult getActivityInfo(Long id) {
+        //查询当前用户信息
+        User user = getById(id);
+        //分页查询当前用户的关注用户列表
+        LambdaQueryWrapper<RegardFansTotal> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RegardFansTotal::getId,id);
+        Page<RegardFansTotal> page = new Page<>(SystemConstants.DEFAULT_PAGE_NUM, SystemConstants.DEFAULT_PAGE_SIZE);
+        regardFansTotalService.page(page,wrapper);
+        List<User> userList = listByIds(page.getRecords().stream().map(RegardFansTotal::getRegardId).collect(Collectors.toList()));
+        //封装结果并返回
+        UserActivityInfoVo userActivityInfoVo = new UserActivityInfoVo(BeanCopyUtils.copyBean(user, AuthorInfoVo.class).setUserTotal(userTotalService.getById(id)),
+                new PageVo(BeanCopyUtils.copyBeanList(userList, UserActivityRegardListVo.class),page.getTotal()));
+        return ResponseResult.okResult(userActivityInfoVo);
     }
 
     /**

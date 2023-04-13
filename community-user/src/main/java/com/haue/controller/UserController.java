@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
+
 
 /**
  * 网站用户表(User)表控制层
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/user")
+@Validated
 public class UserController{
 
     @Autowired
@@ -61,6 +64,16 @@ public class UserController{
             return ResponseResult.errorResult(600,result.toString());
         }
         return userService.searchUser(param);
+    }
+
+    /**
+     * 获取当前用户的动态信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/activityUserInfo/{userId}")
+    public ResponseResult getActivityInfo(@PathVariable("userId") @NotNull Long id){
+        return userService.getActivityInfo(id);
     }
 }
 

@@ -10,7 +10,6 @@ import com.haue.pojo.vo.*;
 import com.haue.service.*;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +56,7 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
         page(page,wrapper);
         List<Community> communityList = page.getRecords();
         return ResponseResult.okResult(BeanCopyUtils.copyBeanList(communityList, HotCommunityListVo.class));
+
     }
 
     /**
@@ -126,7 +126,7 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
         List<ActivityContent> activityContents = activityContentService.list(wrapper);
         //将动态的作者信息和转发的文章、作者信息封装
         List<ActivityContentVo> contents = BeanCopyUtils.copyBeanList(activityContents, ActivityContentVo.class).stream()
-                .map(content -> SystemConstants.IS_REF.equals(content.getIsRef()) ? //判断是不是转发内容
+                .map(content -> SystemConstants.IS_REF_ARTICLE.equals(content.getIsRef()) ? //判断是不是转发内容
                         content.setArticleVo //将转发的文章信息封装到ArticleVo
                                 (BeanCopyUtils.copyBean(articleService.getById(content.getRefId()), RecommendArticleVo.class).setUser //将转发文章的作者信息封装到ArticleVo中
                                         (BeanCopyUtils.copyBean(userService.getById(articleService.getById(content.getRefId()).getCreateBy()), AuthorInfoVo.class))) : content)
@@ -144,10 +144,6 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
                 content.setContentImg(urls);
             }
         }
-//        contents = contents.stream()
-//                .map(content -> content.getContentImg().addAll(imgService.list(new LambdaQueryWrapper<Img>().eq(Img::getActivityId, content.getId())).stream().map(img -> img.getUrl()).collect(Collectors.toList())))
-//                .collect(Collectors.toList());
-
         return ResponseResult.okResult(new CommunityInfoVo(community,contents));
     }
 }

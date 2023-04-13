@@ -57,15 +57,32 @@ public class SystemConstants {
     public static final String REDIS_LOGIN_KEY = "frontLogin:";
 
     /**
-     * myCommunityList获取数据的页码
+     * 获取数据的默认页码
      */
-    public static final int MY_COMMUNITY_LIST_PAGE_NUM = 1;
+    public static final int DEFAULT_PAGE_NUM = 1;
     /**
      * myCommunityList获取数据的条数
      */
     public static final int MY_COMMUNITY_LIST_PAGE_SIZE = 6;
     /**
-     * 动态内容是转发内容
+     * 动态内容是转发文章内容
      */
-    public static final String IS_REF="1";
+    public static final String IS_REF_ARTICLE="1";
+    /**
+     * 动态内容是转发动态内容
+     */
+    public static final String IS_REF_ACTIVITY="2";
+    /**
+     * 获取当前用户的关注用户列表的默认条数
+     */
+    public static final int DEFAULT_PAGE_SIZE = 32;
+    /**
+     * 默认用户id
+     */
+    public static final Long DEFAULT_USER_ID = -1L;
+    /**
+     * 默认社区id
+     */
+    public static final Long DEFAULT_COMMUNITY_ID = 0L;
+
 }
