@@ -22,6 +22,7 @@ import com.haue.service.CategoryService;
 import com.haue.service.TagService;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
+import com.haue.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -228,6 +229,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .distinct()
                 .collect(Collectors.toList());
         return ResponseResult.okResult(articleList);
+    }
+
+    /**
+     * 获取当前用户主页的文章列表
+     * @return
+     */
+    @Override
+    public ResponseResult getArticleList() {
+        Long userId = SecurityUtils.getUserId();
+        LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Article::getCreateBy,userId);
+        Page<Article> page = new Page<>(SystemConstants.DEFAULT_PAGE_NUM, SystemConstants.DEFAULT_ARTICLE_PAGE_SIZE);
+        page(page,wrapper);
+        return ResponseResult.okResult(new PageVo(BeanCopyUtils.copyBeanList(page.getRecords(),ArticleListVo.class), page.getTotal()));
     }
 
     /**

@@ -22,4 +22,8 @@ public interface UserService extends IService<User> {
     ResponseResult searchUser(SearchUserParam param);
 
     ResponseResult getActivityInfo(Long id);
+
+    ResponseResult getUserInfo();
+
+    ResponseResult getRegardInfo(Integer pageSize, Integer pageNum);
 }

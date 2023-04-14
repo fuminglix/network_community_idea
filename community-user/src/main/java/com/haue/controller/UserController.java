@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 
@@ -74,6 +75,26 @@ public class UserController{
     @GetMapping("/activityUserInfo/{userId}")
     public ResponseResult getActivityInfo(@PathVariable("userId") @NotNull Long id){
         return userService.getActivityInfo(id);
+    }
+
+    /**
+     * 获取用户个人页面的信息
+     * @return
+     */
+    @GetMapping("/getUserInfo")
+    public ResponseResult getUserInfo(){
+        return userService.getUserInfo();
+    }
+
+    /**
+     * 查询用户的关注和粉丝信息
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/getRegardUserInfo")
+    public ResponseResult getRegardInfo(@NotNull Integer pageNum,@NotNull Integer pageSize){
+        return userService.getRegardInfo(pageSize,pageNum);
     }
 }
 

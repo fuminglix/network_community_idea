@@ -16,4 +16,5 @@ public class CommunityInfoVo {
     private Community community;
 
     private List<ActivityContentVo> activityContents;
+
 }

@@ -29,4 +29,6 @@ public interface ArticleService extends IService<Article> {
     ResponseResult updateArticle(ArticleParam articleParam);
 
     ResponseResult searchArticle(SearchArticleParam param);
+
+    ResponseResult getArticleList();
 }

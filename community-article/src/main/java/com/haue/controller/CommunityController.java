@@ -32,12 +32,13 @@ public class CommunityController {
 
     /**
      * 获取当前用户关注的社区列表
-     * @param id
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    @GetMapping("/myCommunityList/{id}")
-    public ResponseResult getMyCommunityList(@NotNull( message = "myCommunityList请求：用户Id不能为空") @PathVariable("id") Long id){
-        return communityService.getMyCommunityList(id);
+    @GetMapping("/myCommunityList")
+    public ResponseResult getMyCommunityList(Integer pageNum,Integer pageSize){
+        return communityService.getMyCommunityList(pageNum,pageSize);
     }
 
     /**
@@ -61,6 +62,17 @@ public class CommunityController {
     @GetMapping("/CommunityInfo")
     public ResponseResult getCommunityInfo(@NotNull Integer pageNum ,@NotNull Integer pageSize,@NotNull Long communityId){
         return communityService.getCommunityInfo(pageNum,pageSize,communityId);
+    }
+
+    /**
+     * 查询当前用户在其关注社区的动态信息
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("/regardCommunityInfo")
+    public ResponseResult getRegardCommunityInfo(@NotNull Integer pageNum ,@NotNull Integer pageSize){
+        return communityService.getRegardCommunityInfo(pageNum,pageSize);
     }
 
 }

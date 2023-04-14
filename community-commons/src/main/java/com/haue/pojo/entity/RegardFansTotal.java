@@ -2,6 +2,9 @@ package com.haue.pojo.entity;
 
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,6 +12,8 @@ import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.util.Date;
+
 /**
  * 用户关注信息表(RegardFansTotal)表实体类
  *
@@ -26,5 +31,7 @@ public class RegardFansTotal implements Serializable {
     private Long id;
     //被关注用户id    @TableId
     private Long regardId;
-
+    //创建时间
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
 }

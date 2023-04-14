@@ -10,6 +10,7 @@ import com.haue.pojo.vo.*;
 import com.haue.service.*;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
+import com.haue.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,23 +62,35 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
 
     /**
      * 获取当前用户关注的社区列表
-     * @param id
+     *
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     @Override
-    public ResponseResult getMyCommunityList(Long id) {
+    public ResponseResult getMyCommunityList(Integer pageNum, Integer pageSize) {
+        Long userId = SecurityUtils.getUserId();
         LambdaQueryWrapper<CommunityUser> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(CommunityUser::getUserId,id);
-        List<CommunityUser> communityUserList = communityUserService.list(wrapper);
+        Page<CommunityUser> page = new Page<>();
+        wrapper.eq(CommunityUser::getUserId,userId);
+        if (Objects.nonNull(pageNum) && Objects.nonNull(pageSize)){
+            page.setCurrent(pageNum);
+            page.setSize(pageSize);
+        }else {
+            page.setCurrent(SystemConstants.DEFAULT_PAGE_NUM);
+            page.setSize(SystemConstants.DEFAULT_COMMUNITY_PAGE_SIZE);
+        }
+        communityUserService.page(page,wrapper);
+        List<CommunityUser> communityUserList = page.getRecords();
         if (communityUserList.size() < 1){
             return ResponseResult.okResult();
         }
         List<Long> communityList = communityUserList.stream()
-                .map(communityUser -> communityUser.getCommunityId())
+                .map(CommunityUser::getCommunityId)
                 .distinct()
                 .collect(Collectors.toList());
         List<Community> communities = listByIds(communityList);
-        return ResponseResult.okResult(BeanCopyUtils.copyBeanList(communities, MyCommunityListVo.class));
+        return ResponseResult.okResult(new PageVo(BeanCopyUtils.copyBeanList(communities, MyCommunityListVo.class),page.getTotal()));
     }
 
     /**
@@ -145,5 +158,73 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
             }
         }
         return ResponseResult.okResult(new CommunityInfoVo(community,contents));
+    }
+
+    /**
+     * 查询当前用户在其关注社区的动态信息
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResponseResult getRegardCommunityInfo(Integer pageNum, Integer pageSize) {
+        //获取当前用户id
+        Long userId = SecurityUtils.getUserId();
+        //查询当前用在关注社区发布的动态
+        LambdaQueryWrapper<ActivityContent> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ActivityContent::getCreateBy,userId)
+                .notIn(ActivityContent::getCommunityId,SystemConstants.DEFAULT_COMMUNITY_ID)
+                .orderByDesc(ActivityContent::getCreateTime);
+        Page<ActivityContent> page = new Page<>(pageNum, pageSize);
+        activityContentService.page(page, wrapper);
+        //封装查询到的动态信息
+        List<ActivityContentVo> activityContentVos = toActivityContentVo(page.getRecords());
+        return ResponseResult.okResult(new PageVo(activityContentVos,page.getTotal()));
+    }
+
+    /**
+     * 处理动态中的图片和部分转发动态
+     * @param activityContents
+     * @return
+     */
+    public List<ActivityContentVo> toActivityContentVo(List<ActivityContent> activityContents) {
+        //将动态的作者信息和转发的文章、作者信息封装
+        List<ActivityContentVo> contents = BeanCopyUtils.copyBeanList(activityContents, ActivityContentVo.class).stream()
+                .peek(content -> {
+                    content.setUser(BeanCopyUtils.copyBean(userService.getById(content.getCreateBy()), AuthorInfoVo.class));
+                    if (SystemConstants.IS_REF_ARTICLE.equals(content.getIsRef())){
+                        content.setArticleVo(BeanCopyUtils.copyBean(articleService.getById(content.getRefId()), RecommendArticleVo.class).setUser //将转发文章的作者信息封装到ArticleVo中
+                                (BeanCopyUtils.copyBean(userService.getById(articleService.getById(content.getRefId()).getCreateBy()), AuthorInfoVo.class)));
+                    }
+                    if (SystemConstants.IS_REF_ACTIVITY.equals(content.getIsRef())){
+                        RecommendArticleVo articleVo = new RecommendArticleVo();
+                        ActivityContentVo activityContentVo = BeanCopyUtils.copyBean(getById(content.getRefId()), ActivityContentVo.class);
+                        List<Img> imgs = imgService.list(new LambdaQueryWrapper<Img>().eq(Img::getActivityId, content.getRefId()));
+                        activityContentVo.setContentImg(getImgToString(imgs));
+
+                        articleVo.setActivityContentVo(activityContentVo);
+                        content.setArticleVo(articleVo.setUser(BeanCopyUtils.copyBean(userService.getById(getById(content.getRefId()).getCreateBy()), AuthorInfoVo.class)));
+                    }
+                    List<Img> list = imgService.list(new LambdaQueryWrapper<Img>().eq(Img::getActivityId, content.getId()));
+                    content.setContentImg(getImgToString(list));
+                })
+                .collect(Collectors.toList());
+        return contents;
+    }
+
+    /**
+     * 将img对象的url属性以String集合的形式返回
+     * @param imgs
+     * @return
+     */
+    public List<String> getImgToString(List<Img> imgs){
+        List<String> urls = new ArrayList<>();
+        if (Objects.nonNull(imgs)) {
+            urls = imgs.stream()
+                    .map(Img::getUrl)
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+        return urls;
     }
 }

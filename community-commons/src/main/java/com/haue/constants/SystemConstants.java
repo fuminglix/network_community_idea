@@ -77,6 +77,14 @@ public class SystemConstants {
      */
     public static final int DEFAULT_PAGE_SIZE = 32;
     /**
+     * 获取当前用户主页文章的默认条数
+     */
+    public static final int DEFAULT_ARTICLE_PAGE_SIZE = 10;
+    /**
+     * 获取当前用户主页文章的默认条数
+     */
+    public static final int DEFAULT_COMMUNITY_PAGE_SIZE = 6;
+    /**
      * 默认用户id
      */
     public static final Long DEFAULT_USER_ID = -1L;

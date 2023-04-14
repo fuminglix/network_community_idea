@@ -15,4 +15,10 @@ public class MyCommunityListVo {
     private String communityName;
     //社区头像
     private String avatar;
+    //社区描述
+    private String description;
+    //社区用户数
+    private Long userNumber;
+    //社区发布内容数
+    private Long contentNumber;
 }

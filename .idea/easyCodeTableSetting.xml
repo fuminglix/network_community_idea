@@ -511,9 +511,9 @@
               </option>
               <option name="name" value="NcCommunityUser" />
               <option name="preName" value="nc_" />
-              <option name="saveModelName" value="community-postBar" />
+              <option name="saveModelName" value="community-commons" />
               <option name="savePackageName" value="com.haue" />
-              <option name="savePath" value="./community-postBar/src/main/java/com/haue" />
+              <option name="savePath" value="./community-commons/src/main/java/com/haue" />
               <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>
@@ -567,18 +567,12 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="用户id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被关注用户id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="regardId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>

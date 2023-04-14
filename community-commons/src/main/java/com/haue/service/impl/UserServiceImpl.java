@@ -12,19 +12,18 @@ import com.haue.pojo.entity.User;
 import com.haue.pojo.entity.UserTotal;
 import com.haue.pojo.params.SearchUserParam;
 import com.haue.pojo.params.UserRegisterParams;
-import com.haue.pojo.vo.AuthorInfoVo;
-import com.haue.pojo.vo.PageVo;
-import com.haue.pojo.vo.UserActivityInfoVo;
-import com.haue.pojo.vo.UserActivityRegardListVo;
+import com.haue.pojo.vo.*;
 import com.haue.service.RegardFansTotalService;
 import com.haue.service.UserService;
 import com.haue.service.UserTotalService;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
+import com.haue.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -104,6 +103,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         UserActivityInfoVo userActivityInfoVo = new UserActivityInfoVo(BeanCopyUtils.copyBean(user, AuthorInfoVo.class).setUserTotal(userTotalService.getById(id)),
                 new PageVo(BeanCopyUtils.copyBeanList(userList, UserActivityRegardListVo.class),page.getTotal()));
         return ResponseResult.okResult(userActivityInfoVo);
+    }
+
+    /**
+     * 获取用户个人页面的信息
+     * @return
+     */
+    @Override
+    public ResponseResult getUserInfo() {
+        Long userId = SecurityUtils.getUserId();
+        User user = getById(userId);
+        UserTotal userTotal = userTotalService.getById(userId);
+        return ResponseResult.okResult(BeanCopyUtils.copyBean(user, UserHomeInfoVo.class).setUserTotal(userTotal));
+    }
+
+    /**
+     * 查询用户的关注和粉丝信息
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    @Override
+    public ResponseResult getRegardInfo(Integer pageSize, Integer pageNum) {
+        //获取当前用户id
+        Long userId = SecurityUtils.getUserId();
+        LambdaQueryWrapper<RegardFansTotal> wrapper = new LambdaQueryWrapper<>();
+        RegardInfoVo regardInfoVo = new RegardInfoVo();
+
+        //查询当前用户的关注列表
+        wrapper.eq(RegardFansTotal::getId,userId)
+                .orderByDesc(RegardFansTotal::getCreateTime);
+        List<RegardFansTotal> regardTotals = regardFansTotalService.list(wrapper);
+        if (regardTotals.size() > 0){
+            List<Long> regardUser = regardTotals.stream()
+                    .map(RegardFansTotal::getRegardId)
+                    .distinct()
+                    .collect(Collectors.toList());
+            List<User> regardUserList = list(new LambdaQueryWrapper<User>().in(User::getId, regardUser));
+            //将关注的用户列表封装到regardInfoVo中
+            regardInfoVo.setRegardList(BeanCopyUtils.copyBeanList(regardUserList, AuthorInfoVo.class));
+        }else {
+            regardInfoVo.setRegardList(new ArrayList<>());
+        }
+
+        //查询当前用户的粉丝
+        LambdaQueryWrapper<RegardFansTotal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RegardFansTotal::getRegardId,userId)
+                        .orderByDesc(RegardFansTotal::getCreateTime);
+        List<RegardFansTotal> fansTotals = regardFansTotalService.list(queryWrapper);
+        if (fansTotals.size() > 0){
+            List<Long> fansUser = fansTotals.stream()
+                    .map(RegardFansTotal::getId)
+                    .distinct()
+                    .collect(Collectors.toList());
+            List<User> fansUserList = list(new LambdaQueryWrapper<User>().in(User::getId, fansUser));
+            //将查询到的粉丝列表封装到regardInfoVo中
+            regardInfoVo.setFanslist(BeanCopyUtils.copyBeanList(fansUserList, AuthorInfoVo.class));
+        }else {
+            regardInfoVo.setFanslist(new ArrayList<>());
+        }
+        return ResponseResult.okResult(regardInfoVo);
     }
 
     /**

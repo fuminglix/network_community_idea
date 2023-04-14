@@ -133,4 +133,13 @@ public class ArticleController {
     public ResponseResult getMyArticle(GetMyArticleParam myArticleParam,BindingResult result){
         return articleService.getMyArticle(myArticleParam);
     }
+
+    /**
+     * 获取当前用户主页的文章列表
+     * @return
+     */
+    @GetMapping("/getArticleList")
+    public ResponseResult getArticleList(){
+        return articleService.getArticleList();
+    }
 }
