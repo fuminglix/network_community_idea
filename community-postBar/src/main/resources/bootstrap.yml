@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: postBar-service
-  cloud:
-    nacos:
-      server-addr: 123.57.239.63:8848
-server:
-  port: 3004

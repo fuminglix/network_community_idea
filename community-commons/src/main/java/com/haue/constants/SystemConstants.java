@@ -53,8 +53,9 @@ public class SystemConstants {
      */
     public static final String BUTTON="F";
     public static final String ADMAIN = "1";
-    public static final Long ADMAIN_ID = 1L;
+    public static final Long ADMAIN_ID = 14787164048669L;
     public static final String REDIS_LOGIN_KEY = "frontLogin:";
+    public static final String REDIS_ADMIN_LOGIN_KEY = "adminLogin:";
 
     /**
      * 获取数据的默认页码

@@ -26,4 +26,5 @@ public interface UserService extends IService<User> {
     ResponseResult getUserInfo();
 
     ResponseResult getRegardInfo(Integer pageSize, Integer pageNum);
+
 }

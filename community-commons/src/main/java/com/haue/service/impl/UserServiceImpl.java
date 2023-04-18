@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +38,7 @@ import java.util.stream.Collectors;
 @Service("userService")
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Autowired
+    @Resource
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -46,7 +47,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private RegardFansTotalService regardFansTotalService;
 
-
+//    private
     @Override
     public ResponseResult register(UserRegisterParams userParams) {
         User user = BeanCopyUtils.copyBean(userParams, User.class);

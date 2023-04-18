@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @MapperScan("com.haue.mapper")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.haue")
 public class UploadApplication {
     public static void main(String[] args) {
         SpringApplication.run(UploadApplication.class,args);

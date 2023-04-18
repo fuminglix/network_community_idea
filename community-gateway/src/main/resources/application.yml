@@ -23,6 +23,10 @@ spring:
           uri: lb://article-service
           predicates:
             - Path=/activity/**  # 访问activity路径转发用户服务
+        - id: admin-service
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin/**  # 访问admin路径转发用户服务
 #        - id: product-service # 此名称随意定义
 #          uri: lb://product-service #使用负载均衡,调用服务名,这是服务名
 #          predicates:

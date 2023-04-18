@@ -14,6 +14,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 @Data
 @ConfigurationProperties(prefix = "oss")
 public class UploadServiceImpl implements UploadService {
+
 
     private String accessKey;
     private String secretKey;

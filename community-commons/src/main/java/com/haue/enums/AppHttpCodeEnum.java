@@ -25,7 +25,10 @@ public enum AppHttpCodeEnum {
     ERROR_DELETE(517,"不能删除当前操作的用户"),
     INFO_NOT_NULL(518,"账号信息不能有空"),
     PARAMS_NOT_NULL(519,"参数不能有空"),
-    TOKEN_NOT_EXIT(520,"token不能为空");
+    TOKEN_NOT_EXIT(520,"token不能为空"),
+    USERNAME_NOT_EXIST(521,"用户名不存在"),
+
+    USERNAME_DISABLE(522,"用户名已被禁用");
     int code;
     String msg;
 

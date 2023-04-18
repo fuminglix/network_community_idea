@@ -13,6 +13,7 @@
         <module>community-user</module>
         <module>community-upload</module>
         <module>community-article</module>
+        <module>community-admin</module>
     </modules>
     <packaging>pom</packaging>
 

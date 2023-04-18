@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="community-admin" />
         <module name="community-upload" />
         <module name="community-user" />
         <module name="community-gateway" />
@@ -19,6 +20,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="community-admin" options="-parameters" />
       <module name="community-article" options="-parameters" />
       <module name="community-commons" options="-parameters" />
       <module name="community-gateway" options="-parameters" />
