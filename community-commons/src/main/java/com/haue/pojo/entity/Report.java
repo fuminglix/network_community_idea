@@ -3,6 +3,9 @@ package com.haue.pojo.entity;
 import java.util.Date;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -44,10 +47,13 @@ public class Report implements Serializable {
     //举报描述
     private String reportDescription;
     //举报时间
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     //处理人
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
     //处理时间
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
     //结果描述
     private String reportResult;

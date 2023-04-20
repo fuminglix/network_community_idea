@@ -93,5 +93,9 @@ public class SystemConstants {
      * 默认社区id
      */
     public static final Long DEFAULT_COMMUNITY_ID = 0L;
+    /**
+     * 举报记录默认标志
+     */
+    public static final int DEFAULT_REPORT_FLAG_ID = 2;
 
 }

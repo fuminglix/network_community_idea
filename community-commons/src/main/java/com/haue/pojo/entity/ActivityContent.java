@@ -31,7 +31,8 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @TableName("nc_activity_content")
 public class ActivityContent implements Serializable {
-    //动态id    @TableId
+    //动态id
+    @TableId
     private Long id;
 
     //动态内容

@@ -21,13 +21,13 @@
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
-                    <option name="comment" value="转发标志（0代表非转发 1转发）" />
+                    <option name="comment" value="转发标志（0代表非转发 1转发文章 2转发动态）" />
                     <option name="custom" value="false" />
                     <option name="name" value="isRef" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
-                    <option name="comment" value="转发的文章id" />
+                    <option name="comment" value="转发的文章或者动态id" />
                     <option name="custom" value="false" />
                     <option name="name" value="refId" />
                     <option name="type" value="java.lang.Long" />
@@ -96,9 +96,9 @@
               </option>
               <option name="name" value="NcActivityContent" />
               <option name="preName" value="nc_" />
-              <option name="saveModelName" value="community-article" />
+              <option name="saveModelName" value="community-admin" />
               <option name="savePackageName" value="com.haue" />
-              <option name="savePath" value="./community-article/src/main/java/com/haue" />
+              <option name="savePath" value="./community-admin/src/main/java/com/haue" />
               <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>
@@ -581,9 +581,9 @@
               </option>
               <option name="name" value="NcImg" />
               <option name="preName" value="nc_" />
-              <option name="saveModelName" value="community-article" />
+              <option name="saveModelName" value="community-admin" />
               <option name="savePackageName" value="com.haue" />
-              <option name="savePath" value="./community-article/src/main/java/com/haue" />
+              <option name="savePath" value="./community-admin/src/main/java/com/haue" />
               <option name="templateGroupName" value="MybatisPlus" />
             </TableInfoDTO>
           </value>
@@ -856,108 +856,72 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被举报文章id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="articleId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被举报文章作者id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportedId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报人" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报分类id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportCategory" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportDescription" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理人" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="结果描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportResult" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理结果标志（0代表举报失败，1代表举报成功）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="repFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="删除标志（0代表未删除，1代表已删除）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="delFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
@@ -1105,117 +1069,78 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被举报内容id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="contentId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报的内容类型（0 文章，1 评论，2 动态）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportType" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被举报用户id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportedId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报人" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报分类id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportCategory" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportDescription" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="举报时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理人" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="结果描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="reportResult" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理结果标志（0代表举报失败，1代表举报成功）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="repFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="处理结果标志（0代表举报失败，1代表举报成功）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="delFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
@@ -1239,77 +1164,50 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="分类名称" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="categoryName" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="状态0:正常,1禁用" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="status" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="内容类型（0 文章，1评论）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="type" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="删除标志（0代表未删除，1代表已删除）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="delFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>

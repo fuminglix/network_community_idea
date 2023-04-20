@@ -3,6 +3,9 @@ package com.haue.pojo.entity;
 import java.util.Date;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,8 +38,10 @@ public class Community implements Serializable {
     //社区发布内容数
     private Long contentNumber;
     //创建用户id
+    @TableField(fill = FieldFill.INSERT)
     private Long createBy;
     //创建时间
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;

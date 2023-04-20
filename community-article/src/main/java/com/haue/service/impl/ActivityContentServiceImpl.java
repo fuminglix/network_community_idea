@@ -123,6 +123,7 @@ public class ActivityContentServiceImpl extends ServiceImpl<ActivityContentMappe
         //将动态的作者信息和转发的文章、作者信息封装
         List<ActivityContentVo> contents = BeanCopyUtils.copyBeanList(activityContents, ActivityContentVo.class).stream()
                 .peek(content -> {
+
                     content.setUser(BeanCopyUtils.copyBean(userService.getById(content.getCreateBy()), AuthorInfoVo.class));
                     if (SystemConstants.IS_REF_ARTICLE.equals(content.getIsRef())){
                         content.setArticleVo(BeanCopyUtils.copyBean(articleService.getById(content.getRefId()), RecommendArticleVo.class).setUser //将转发文章的作者信息封装到ArticleVo中

@@ -9,14 +9,13 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleReportParam {
+public class UpdateReportParam {
 
     @NotNull
-    private Integer pageNum;
+    private Long id;
+    //举报分类名
     @NotNull
-    private Integer pageSize;
-    @NotNull
-    private Integer type;
-    private Long articleId;
-    private String title;
+    private Integer repFlag;
+    //举报描述
+    private String reportResult;
 }

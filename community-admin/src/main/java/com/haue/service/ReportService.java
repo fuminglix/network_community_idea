@@ -1,8 +1,8 @@
 package com.haue.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.haue.params.ArticleReportParam;
-import com.haue.params.CommentReportParam;
+import com.haue.params.ReportParam;
+import com.haue.params.UpdateReportParam;
 import com.haue.pojo.entity.Report;
 import com.haue.utils.ResponseResult;
 
@@ -15,7 +15,17 @@ import com.haue.utils.ResponseResult;
  */
 public interface ReportService extends IService<Report> {
 
-    ResponseResult getArticleList(ArticleReportParam param);
+    ResponseResult getArticleList(ReportParam param);
 
-    ResponseResult getCommentList(CommentReportParam param);
+    ResponseResult getCommentList(ReportParam param);
+
+    ResponseResult getArticle(Long id);
+
+    ResponseResult updateReport(UpdateReportParam param);
+
+    ResponseResult getComment(Long id);
+
+    ResponseResult getActivityList(ReportParam param);
+
+    ResponseResult getActivity(Long id);
 }
