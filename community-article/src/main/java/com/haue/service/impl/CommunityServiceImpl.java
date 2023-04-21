@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
  *
  * @author makejava
  * @since 2023-04-05 15:00:41
+ * TODO 转发动态时要确认被转发的动态是否也是转发动态，若是需要将被转发的dispatchContent与当前转发用户的dispatchContent拼接（一般用 // 隔开）
  */
 @Service("communityService")
 public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community> implements CommunityService {
@@ -98,6 +99,8 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
      * @param pageNum
      * @param pageSize
      * @return
+     * TODO 社区的推荐的内容默认是从文章中找，不合适，社区动态不能发文章，只能转发文章。前端将QuoteItem换成PostbarItem组件
+     *
      */
     @Override
     public ResponseResult getRecommendCommunity(Integer pageNum, Integer pageSize) {
