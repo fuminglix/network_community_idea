@@ -33,13 +33,17 @@ public class SystemConstants {
 
     public static final String LINK_STATUS_NORMAL="0";
     /**
-     * 文章评论
+     * 审核记录-文章类型
      */
-    public static final String ARTICLE_COMMENT="0";
+    public static final int CHECK_ARTICLE=0;
     /**
-     * 友链评论
+     * 审核记录-评论类型
      */
-    public static final String LINK_COMMENT="1";
+    public static final int CHECK_COMMENT=1;
+    /**
+     * 审核记录-动态类型
+     */
+    public static final int ACTIVITY_COMMENT=2;
     /**
      * 浏览量
      */
@@ -97,5 +101,29 @@ public class SystemConstants {
      * 举报记录默认标志
      */
     public static final int DEFAULT_REPORT_FLAG_ID = 2;
-
+    public static final String REQUEST_SUCCESS = "成功";
+    /**
+     * 审核通过
+     */
+    public static final String CHECK_SUCCESS = "pass";
+    /**
+     * 审核通过码
+     */
+    public static final int CHECK_SUCCESS_CODE = 0;
+    /**
+     * 审核不通过
+     */
+    public static final String CHECK_FAIL = "block";
+    /**
+     * 审核不同过码
+     */
+    public static final int CHECK_FAIL_CODE = 2;
+    /**
+     * 疑似有问题
+     */
+    public static final String CHECK_REVIEW = "review";
+    /**
+     * 问题码
+     */
+    public static final int CHECK_REVIEW_CODE = 1;
 }

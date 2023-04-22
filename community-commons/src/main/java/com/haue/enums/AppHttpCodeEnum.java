@@ -28,7 +28,8 @@ public enum AppHttpCodeEnum {
     TOKEN_NOT_EXIT(520,"token不能为空"),
     USERNAME_NOT_EXIST(521,"用户名不存在"),
 
-    USERNAME_DISABLE(522,"用户名已被禁用");
+    USERNAME_DISABLE(522,"用户名已被禁用"),
+    CHECK_FAIL(600,"当前审核人数较多，请稍后再尝试上传");
     int code;
     String msg;
 

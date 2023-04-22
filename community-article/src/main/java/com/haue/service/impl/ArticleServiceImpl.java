@@ -1,32 +1,26 @@
 package com.haue.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haue.constants.SystemConstants;
-import com.haue.enums.AppHttpCodeEnum;
-import com.haue.exception.SystemException;
 import com.haue.mapper.ArticleMapper;
 import com.haue.mapper.ArticleTagMapper;
 import com.haue.mapper.TagMapper;
 import com.haue.pojo.entity.Article;
 import com.haue.pojo.entity.ArticleTag;
+import com.haue.pojo.entity.CheckResult;
 import com.haue.pojo.entity.Tag;
 import com.haue.pojo.params.ArticleParam;
 import com.haue.pojo.params.GetMyArticleParam;
 import com.haue.pojo.params.SearchArticleParam;
 import com.haue.pojo.vo.*;
-import com.haue.service.ArticleService;
-import com.haue.service.ArticleTagService;
-import com.haue.service.CategoryService;
-import com.haue.service.TagService;
-import com.haue.utils.BeanCopyUtils;
-import com.haue.utils.ResponseResult;
-import com.haue.utils.SecurityUtils;
+import com.haue.service.*;
+import com.haue.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +53,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private ArticleTagMapper articleTagMapper;
+
+    @Autowired
+    private CheckResultService checkResultService;
     /**
      * 获取文章信息
      * @param pageNum
@@ -139,6 +136,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult addArticle(ArticleParam articleParam) {
         Article article = BeanCopyUtils.copyBean(articleParam, Article.class);
         save(article);
+        CheckResult result = CheckContentUtil.check(articleParam.getContent());
+        if (SystemConstants.CHECK_SUCCESS_CODE != result.getSuggest()){
+            result.setType(SystemConstants.CHECK_ARTICLE);
+            result.setContentId(article.getId());
+            checkResultService.save(result);
+            update(null,new LambdaUpdateWrapper<Article>().eq(Article::getId,article.getId()).set(Article::getStatus,SystemConstants.ARTICLE_STATUS_REVIEW_FAILED));
+        }else {
+            update(null,new LambdaUpdateWrapper<Article>().eq(Article::getId,article.getId()).set(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL));
+        }
 //        添加文章标签
         if (articleParam.getTags().size() > 0){
             return addAndUpdateTags(article,articleParam);
@@ -291,4 +297,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         return ResponseResult.okResult();
     }
+
+
 }

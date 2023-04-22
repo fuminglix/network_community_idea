@@ -30,7 +30,6 @@ public class ArticleParam {
     @NotNull(message = "categoryId不能为空")
     private Long categoryId;
     //所属社区id
-    @NotNull(message = "communityId不能为空")
     private Long communityId;
     //标签
     private List<Tag> tags;
