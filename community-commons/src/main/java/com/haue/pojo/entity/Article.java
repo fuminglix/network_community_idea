@@ -84,9 +84,5 @@ public class Article implements Serializable {
     //定时发布时间
     private Date scheduled;
     //删除标志（0代表未删除，1代表已删除）
-    private String isActivity;
-    //动态id
-    private Long activityId;
-    //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
 }

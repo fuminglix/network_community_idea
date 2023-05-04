@@ -43,7 +43,7 @@ public class SystemConstants {
     /**
      * 审核记录-动态类型
      */
-    public static final int ACTIVITY_COMMENT=2;
+    public static final int CHECK_ACTIVITY=2;
     /**
      * 浏览量
      */

@@ -14,6 +14,7 @@
         <module>community-upload</module>
         <module>community-article</module>
         <module>community-admin</module>
+        <module>community-discover</module>
     </modules>
     <packaging>pom</packaging>
 

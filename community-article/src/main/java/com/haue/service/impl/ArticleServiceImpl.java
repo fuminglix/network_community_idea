@@ -135,15 +135,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional
     public ResponseResult addArticle(ArticleParam articleParam) {
         Article article = BeanCopyUtils.copyBean(articleParam, Article.class);
-        save(article);
+        save(article); //保存文章
+        //审核内容
         CheckResult result = CheckContentUtil.check(articleParam.getContent());
-        if (SystemConstants.CHECK_SUCCESS_CODE != result.getSuggest()){
+        if (SystemConstants.CHECK_SUCCESS_CODE != result.getSuggest()){ //审核不通过
             result.setType(SystemConstants.CHECK_ARTICLE);
             result.setContentId(article.getId());
-            checkResultService.save(result);
-            update(null,new LambdaUpdateWrapper<Article>().eq(Article::getId,article.getId()).set(Article::getStatus,SystemConstants.ARTICLE_STATUS_REVIEW_FAILED));
-        }else {
-            update(null,new LambdaUpdateWrapper<Article>().eq(Article::getId,article.getId()).set(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL));
+            checkResultService.save(result); //插入审核记录
+            update(null,new LambdaUpdateWrapper<Article>() //根据审核结果修改文章状态
+                    .eq(Article::getId,article.getId())
+                    .set(Article::getStatus,SystemConstants.ARTICLE_STATUS_REVIEW_FAILED));
+        }else { //审核通过
+            result.setType(SystemConstants.CHECK_ARTICLE);
+            result.setContentId(article.getId());
+            checkResultService.save(result); //插入审核记录
+            update(null,new LambdaUpdateWrapper<Article>() //根据审核结果修改文章状态
+                    .eq(Article::getId,article.getId())
+                    .set(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL));
         }
 //        添加文章标签
         if (articleParam.getTags().size() > 0){
@@ -245,7 +253,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getArticleList() {
         Long userId = SecurityUtils.getUserId();
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Article::getCreateBy,userId);
+        wrapper.eq(Article::getCreateBy,userId)
+                .eq(Article::getStatus,SystemConstants.ARTICLE_STATUS_NORMAL);
         Page<Article> page = new Page<>(SystemConstants.DEFAULT_PAGE_NUM, SystemConstants.DEFAULT_ARTICLE_PAGE_SIZE);
         page(page,wrapper);
         return ResponseResult.okResult(new PageVo(BeanCopyUtils.copyBeanList(page.getRecords(),ArticleListVo.class), page.getTotal()));

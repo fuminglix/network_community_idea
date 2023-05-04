@@ -198,6 +198,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(phoneNumberExist(user.getPhonenumber(),id)){
             throw new SystemException(AppHttpCodeEnum.PHONENUMBER_EXIST);
         }
+        if(emailExist(user.getEmail(),id)){
+            throw new SystemException(AppHttpCodeEnum.EMAIL_EXIST);
+        }
         return false;
     }
 
@@ -236,6 +239,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private boolean phoneNumberExist(String phoneNumber,Long id) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getPhonenumber,phoneNumber)
+                .notIn(id != null,User::getId,id);
+        return count(queryWrapper)>0;
+    }
+
+    /**
+     * 判断邮箱是否已存在
+     * @param email
+     * @param id
+     * @return
+     */
+    private boolean emailExist(String email,Long id) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getEmail,email)
                 .notIn(id != null,User::getId,id);
         return count(queryWrapper)>0;
     }

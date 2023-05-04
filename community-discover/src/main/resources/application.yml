@@ -27,7 +27,29 @@ spring:
         #连接池中的最小空闲连接
         min-idle: 0
 
-oss:
-  accessKey: Au1Tszq7zBY0rfxaKBKCXebdYDSSznay0zPsZjl9
-  secretKey: RomxPgAXfCqcl9wnMC8yDL9TzGq4dDE8wuNAT4KD
-  bucket: network-c
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.haue.pojo #设置别名
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+
+ribbon:
+  eager-load:
+    enabled: true #开启饥饿加载提升第一次访问速度
+    clients:
+      - discover-service #指定开启服务
+feign:
+  httpclient:
+    enabled: true  # 开启httpClient开关,启动连接池,提升feign连接效率!
+    max-connections: 200  #最大连接数量
+    max-connections-per-route: 50  #单路径最大连接数

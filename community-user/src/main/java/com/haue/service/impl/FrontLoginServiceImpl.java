@@ -38,6 +38,7 @@ public class FrontLoginServiceImpl implements FrontLoginService {
      */
     @Override
     public ResponseResult login(UserCheckParam user) {
+        //进行信息验证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         //判断是否认证通过
@@ -50,7 +51,7 @@ public class FrontLoginServiceImpl implements FrontLoginService {
         }catch (Exception e){
             return ResponseResult.okResult(new SystemException(AppHttpCodeEnum.TOKEN_NOT_EXIT));
         }
-//        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        //LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         String userId = loginUser.getUser().getId().toString();
         String jwt = JwtUtil.createJWT(userId);
         //把用户信息存入redis
