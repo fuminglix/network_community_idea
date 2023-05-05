@@ -29,7 +29,7 @@ public class Comment implements Serializable {
     @TableId
     private Long id;
 
-    //评论类型（0代表文章评论，1代表动态评论）
+    //评论类型（0代表文章评论，1代表动态评论, 2回答评论）
     private String type;
     //文章id
     private Long articleId;

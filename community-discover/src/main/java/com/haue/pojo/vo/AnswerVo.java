@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -11,8 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class AnswerListVo {
-
+@Accessors(chain = true)
+public class AnswerVo {
     private Long id;
     //回答内容
     private String content;
@@ -20,6 +21,8 @@ public class AnswerListVo {
     private Long questionId;
     //被回答问题描述
     private String questionTitle;
+    //被回答问题详细描述
+    private String questionContent;
     //缩略图
     private String thumbnail;
     //转发数
@@ -34,4 +37,5 @@ public class AnswerListVo {
     private Long createBy;
     //回答时间
     private Date createTime;
+    private AuthorInfoVo user;
 }

@@ -2,6 +2,8 @@ package com.haue.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.haue.pojo.entity.Question;
+import com.haue.pojo.param.QuestionParam;
+import com.haue.utils.ResponseResult;
 
 
 /**
@@ -12,4 +14,9 @@ import com.haue.pojo.entity.Question;
  */
 public interface QuestionService extends IService<Question> {
 
+    ResponseResult addQuestion(QuestionParam param);
+
+    ResponseResult getQuestionList(Integer pageNum, Integer pageSize);
+
+    ResponseResult getQuestion(Long id);
 }
