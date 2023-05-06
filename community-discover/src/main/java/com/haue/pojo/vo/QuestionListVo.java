@@ -16,7 +16,7 @@ public class QuestionListVo {
     private String title;
     //回答该问题的数量
     private Long answerCount;
-    //问题类型（0 大学，1高中）
+    //问题类型（0 大学，1中学）
     private Integer type;
     //详细描述
     private String content;

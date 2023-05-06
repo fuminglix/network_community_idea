@@ -24,7 +24,7 @@ public class StudentController {
 
     @GetMapping("/answer/answerList")
     public ResponseResult getAnswerList(@NotNull Integer pageNum,@NotNull Integer pageSize,@NotNull Integer type){
-        return answerService.getAnswerList(pageNum,pageSize,type);
+        return answerService.getAnswerListByType(pageNum,pageSize,type);
     }
 
     @PostMapping("/question")
@@ -33,8 +33,8 @@ public class StudentController {
     }
 
     @GetMapping("/question/questionList")
-    public ResponseResult getQuestionList(@NotNull Integer pageNum,@NotNull Integer pageSize){
-        return questionService.getQuestionList(pageNum,pageSize);
+    public ResponseResult getQuestionList(@NotNull Integer pageNum,@NotNull Integer pageSize,@NotNull Integer type,String sort){
+        return questionService.getQuestionList(pageNum,pageSize,type,sort);
     }
 
     @GetMapping("/question/{id}")
@@ -50,5 +50,10 @@ public class StudentController {
     @GetMapping("/answer/{id}")
     public ResponseResult getAnswer(@PathVariable("id") Long id){
         return answerService.getAnswer(id);
+    }
+
+    @GetMapping("/answer/answerListById")
+    public ResponseResult getAnswerListById(@NotNull Integer pageNum,@NotNull Integer pageSize,@NotNull Long questionId){
+        return answerService.getAnswerListById(pageNum,pageSize,questionId);
     }
 }

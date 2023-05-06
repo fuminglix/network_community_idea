@@ -34,4 +34,5 @@ public class AnswerListVo {
     private Long createBy;
     //回答时间
     private Date createTime;
+    private AuthorInfoVo user;
 }

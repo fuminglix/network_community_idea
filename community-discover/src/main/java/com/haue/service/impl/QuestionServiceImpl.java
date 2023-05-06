@@ -20,6 +20,7 @@ import com.haue.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -59,10 +60,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
      * @return
      */
     @Override
-    public ResponseResult getQuestionList(Integer pageNum, Integer pageSize) {
+    public ResponseResult getQuestionList(Integer pageNum, Integer pageSize,Integer type,String sort) {
         LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Question::getDelFlag, SystemConstants.STATUS_NORMAL)
-                .orderByDesc(Question::getCreateTime);
+                .eq(Question::getType,type)
+                .orderByDesc(StringUtils.hasText(sort),Question::getAnswerCount)
+                .orderByDesc(!StringUtils.hasText(sort),Question::getCreateTime);
         Page<Question> page = new Page<>(pageNum, pageSize);
         page(page,wrapper);
         List<QuestionListVo> listVos = BeanCopyUtils.copyBeanList(page.getRecords(), QuestionListVo.class);

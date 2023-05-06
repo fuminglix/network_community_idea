@@ -14,9 +14,11 @@ import com.haue.utils.ResponseResult;
  */
 public interface AnswerService extends IService<Answer> {
 
-    ResponseResult getAnswerList(Integer pageNum, Integer pageSize, Integer type);
+    ResponseResult getAnswerListByType(Integer pageNum, Integer pageSize, Integer type);
 
     ResponseResult addAnswer(AnswerParam param);
 
     ResponseResult getAnswer(Long id);
+
+    ResponseResult getAnswerListById(Integer pageNum, Integer pageSize, Long questionId);
 }

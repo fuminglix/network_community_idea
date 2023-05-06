@@ -16,7 +16,7 @@ public interface QuestionService extends IService<Question> {
 
     ResponseResult addQuestion(QuestionParam param);
 
-    ResponseResult getQuestionList(Integer pageNum, Integer pageSize);
+    ResponseResult getQuestionList(Integer pageNum, Integer pageSize,Integer type,String sort);
 
     ResponseResult getQuestion(Long id);
 }

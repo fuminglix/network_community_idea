@@ -14,7 +14,7 @@ public class AnswerParam {
     //被回答问题id
     private Long questionId;
     //被回答问题描述
-    private String questionContent;
+    private String questionTitle;
     //缩略图
     private String thumbnail;
     //状态（0已发布，1草稿 2 审核中 3 未通过）
