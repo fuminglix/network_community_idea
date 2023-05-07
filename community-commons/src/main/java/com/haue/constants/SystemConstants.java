@@ -126,4 +126,36 @@ public class SystemConstants {
      * 问题码
      */
     public static final int CHECK_REVIEW_CODE = 1;
+    /**
+     * 举报成功状态码
+     */
+    public static final int REPORT_SUCCESS_CODE = 1;
+    /**
+     * 举报失败状态码
+     */
+    public static final int REPORT_FAIL_CODE = 0;
+    /**
+     * 信誉度默认判断值
+     */
+    public static final int DEFAULT_REPUTATION = 0;
+    /**
+     * 默认时间
+     */
+    public static final long ONE_DAY_MILLIS = 1000L * 60 * 60 * 24;
+    /**
+     * 信誉度默认减少值
+     */
+    public static final int DEFAULT_REPUTATION_REDUCE = -2;
+    /**
+     * 信誉度默认增加值
+     */
+    public static final int DEFAULT_REPUTATION_ADD = 2;
+    /**
+     * 信誉度扣除因子
+     */
+    public static final int DEFAULT_REPUTATION_REDUCE_FACTOR = 1;
+    /**
+     * 信誉度判断是否加重处罚的默认间隔时间
+     */
+    public static final Long DEFAULT_REPUTATION_TIME_FACTOR = 7L;
 }

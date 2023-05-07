@@ -1,14 +1,19 @@
 package com.haue.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haue.constants.SystemConstants;
+import com.haue.enums.AppHttpCodeEnum;
+import com.haue.exception.SystemException;
 import com.haue.mapper.ReportMapper;
+import com.haue.params.AddReportParam;
 import com.haue.params.ReportParam;
 import com.haue.params.UpdateReportParam;
 import com.haue.pojo.entity.*;
 import com.haue.service.*;
+import com.haue.utils.SecurityUtils;
 import com.haue.vo.*;
 import com.haue.pojo.vo.PageVo;
 import com.haue.utils.BeanCopyUtils;
@@ -16,12 +21,13 @@ import com.haue.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import javax.xml.crypto.Data;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 被举报文章表(ArticleReport)表服务实现类
@@ -49,6 +55,9 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
     @Autowired
     private ImgService imgService;
+
+    @Autowired
+    private UserReputationRecordService userReputationRecordService;
 
     /**
      * 获取被举报文章列表
@@ -165,7 +174,68 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
     @Override
     public ResponseResult updateReport(UpdateReportParam param) {
         Report report = BeanCopyUtils.copyBean(param, Report.class);
-        updateById(report);
+        report.setUpdateBy(SecurityUtils.getUserId());
+        updateById(report); //更新举报记录中的处理结果
+        Report record = getById(param.getId()); //获取当前正在处理的记录
+        Long reportedId = userService.getById(record.getReportedId()).getId(); //查询被举报用户id
+        Long reporterId = userService.getById(record.getCreateBy()).getId(); //查询举报用户id
+
+        UserReputationRecord reportedRecord = new UserReputationRecord(); //新建一条被举报用户信誉修改记录
+        UserReputationRecord reporterRecord = new UserReputationRecord(); //新建一条举报用户信誉修改记录
+        List<Integer> result = null; //临时变量储存用户一周内扣分记录
+        List<UserReputationRecord> records = new ArrayList<>(); //储存被举报用户的扣分记录
+        List<UserReputationRecord> list = new ArrayList<>(); //存储举报用户的扣分记录
+
+        List<UserReputationRecord> recordList = getUserReputationRecord(reportedId, reporterId); //查询举报用户和被举报用户的扣分记录
+        if (recordList.size() > 0){
+            records = recordList.stream() //筛选被举报用户的扣分记录
+                    .filter(r -> Objects.equals(r.getUserId(), reportedId))
+                    .collect(Collectors.toList());
+            list = recordList.stream() //筛选举报用户的扣分记录
+                    .filter(r -> Objects.equals(r.getUserId(), reporterId))
+                    .collect(Collectors.toList());
+        }
+        if (param.getRepFlag() == SystemConstants.REPORT_SUCCESS_CODE){ //举报成功时
+            reportedRecord.setUserId(reportedId); //设置被举报用户信誉修改记录的用户id
+            reporterRecord.setUserId(reporterId); //设置举报用户信誉修改记录的用户id
+            if (records.size() > 0 && (result = CheckReputationRecord(records)).size() > 0){ //判断用户是否在一周之内扣过分
+                userService.update(null,new LambdaUpdateWrapper<User>() //条件成立，将用户的信誉度按照上次扣分数的两倍扣除
+                        .eq(User::getId,reportedId)
+                        .setSql("`reputation` = `reputation` + "+ (result.get(0) << SystemConstants.DEFAULT_REPUTATION_REDUCE_FACTOR)));
+                reportedRecord.setUpdateScore(result.get(0) << SystemConstants.DEFAULT_REPUTATION_REDUCE_FACTOR); //设置用户信誉度修改记录的修改值
+            }else { //用户一周之内没有扣分记录
+                userService.update(null,new LambdaUpdateWrapper<User>() //将用户的信誉度按默认的扣除值（-2）扣除
+                        .eq(User::getId,reportedId)
+                        .setSql("`reputation` = `reputation` + "+ SystemConstants.DEFAULT_REPUTATION_REDUCE));
+                reportedRecord.setUpdateScore(SystemConstants.DEFAULT_REPUTATION_REDUCE); //设置用户信誉度修改记录的修改值
+            }
+            reportedRecord.setAfterReputation(userService.getById(reportedId).getReputation()); //设置用户信誉度修改记录的修改后信誉值
+            userReputationRecordService.save(reportedRecord); //保存被举报用的该条扣分记录
+
+            userService.update(null,new LambdaUpdateWrapper<User>() //将举报用户的信誉度按默认值（2）增加
+                    .eq(User::getId,reporterId)
+                    .setSql("`reputation` = `reputation` + "+ SystemConstants.DEFAULT_REPUTATION_ADD));
+            reporterRecord.setUpdateScore(SystemConstants.DEFAULT_REPUTATION_ADD); //和上面相同，设置用户信誉度修改记录的各项值并保存
+            reporterRecord.setUserId(reporterId);
+            reporterRecord.setAfterReputation(userService.getById(reporterId).getReputation());
+            userReputationRecordService.save(reporterRecord);
+        }
+        if (param.getRepFlag() == SystemConstants.REPORT_FAIL_CODE){ //举报失败
+            reporterRecord.setUserId(reporterId); //设置用户信誉度修改记录的用户id
+            if (list.size() > 0 && (result = CheckReputationRecord(list)).size() > 0){ //判断举报用户一周之内是否有扣分记录
+                userService.update(null,new LambdaUpdateWrapper<User>() //条件成立后处理方式和上面相同
+                        .eq(User::getId,reporterId)
+                        .setSql("`reputation` = `reputation` + "+ (result.get(0)<< SystemConstants.DEFAULT_REPUTATION_REDUCE_FACTOR)));
+                reporterRecord.setUpdateScore(result.get(0)<< SystemConstants.DEFAULT_REPUTATION_REDUCE_FACTOR);
+            }else { //同上
+                userService.update(null,new LambdaUpdateWrapper<User>()
+                        .eq(User::getId,reporterId)
+                        .setSql("`reputation` = `reputation` + "+ SystemConstants.DEFAULT_REPUTATION_REDUCE));
+                reporterRecord.setUpdateScore(SystemConstants.DEFAULT_REPUTATION_REDUCE);
+            }
+            reporterRecord.setAfterReputation(userService.getById(reporterId).getReputation());
+            userReputationRecordService.save(reporterRecord);
+        }
         return ResponseResult.okResult();
     }
 
@@ -263,6 +333,31 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
     }
 
     /**
+     * 添加举报记录
+     * @param param
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResponseResult addReport(AddReportParam param) {
+        Report report = BeanCopyUtils.copyBean(param, Report.class);
+        Long userId = null;
+        if (SystemConstants.CHECK_ARTICLE == param.getType()){
+            userId = articleService.getById(param.getContentId()).getCreateBy();
+        }else if(SystemConstants.CHECK_COMMENT == param.getType()){
+            userId = commentService.getById(param.getContentId()).getCreateBy();
+        }else if(SystemConstants.CHECK_ACTIVITY == param.getType()){
+            userId = activityContentService.getById(param.getContentId()).getCreateBy();
+        }
+        report.setReportedId(userId);
+        boolean b = save(report);
+        if (!b){
+            throw new SystemException(AppHttpCodeEnum.SYSTEM_ERROR);
+        }
+        return ResponseResult.okResult();
+    }
+
+    /**
      * 将img对象的url属性以String集合的形式返回
      * @param imgs
      * @return
@@ -276,5 +371,36 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
                     .collect(Collectors.toList());
         }
         return urls;
+    }
+
+    /**
+     * 检查用户是否在一周内被扣除过信誉度
+     * @param records 用户的扣分记录
+     * @return 按时间倒序返回用户一周内被扣分数
+     */
+    public List<Integer> CheckReputationRecord(List<UserReputationRecord> records){
+        Date date = new Date();
+        List<Integer> result = records.stream()
+                .filter(r -> (date.getTime() - r.getCreateTime().getTime()) / SystemConstants.ONE_DAY_MILLIS <= SystemConstants.DEFAULT_REPUTATION_TIME_FACTOR)
+                .collect(Collectors.toList())
+                .stream()
+                .sorted(Comparator.comparing(UserReputationRecord::getCreateTime).reversed())
+                .map(UserReputationRecord::getUpdateScore)
+                .collect(Collectors.toList());
+        return result;
+    }
+
+    /**
+     * 获取举报用户和被举报用户的扣分记录
+     * @param reportedId
+     * @param reporterId
+     * @return
+     */
+    public List<UserReputationRecord> getUserReputationRecord(Long reportedId,Long reporterId){
+        LambdaQueryWrapper<UserReputationRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(UserReputationRecord::getUserId,reportedId,reporterId) //查询被举报用户的扣分记录
+                .lt(UserReputationRecord::getUpdateScore,SystemConstants.DEFAULT_REPUTATION)
+                .orderByDesc(UserReputationRecord::getCreateTime);
+        return userReputationRecordService.list(wrapper);
     }
 }

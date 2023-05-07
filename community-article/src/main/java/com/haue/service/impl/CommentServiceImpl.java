@@ -1,23 +1,29 @@
 package com.haue.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haue.constants.SystemConstants;
 import com.haue.enums.AppHttpCodeEnum;
 import com.haue.exception.SystemException;
 import com.haue.mapper.CommentMapper;
+import com.haue.pojo.entity.ActivityContent;
+import com.haue.pojo.entity.Article;
 import com.haue.pojo.entity.Comment;
 import com.haue.pojo.entity.User;
 import com.haue.pojo.params.GetCommentParam;
 import com.haue.pojo.vo.CommentVo;
 import com.haue.pojo.vo.PageVo;
+import com.haue.service.ActivityContentService;
+import com.haue.service.ArticleService;
 import com.haue.service.CommentService;
 import com.haue.service.UserService;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -34,6 +40,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private ActivityContentService activityContentService;
 
 //    @Override
 //    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
@@ -73,6 +85,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
+    @Transactional
     public ResponseResult addComment(Comment comment) {
         if (!StringUtils.hasText(comment.getContent())){
             throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
@@ -81,6 +94,15 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         if (comment.getRootId() != -1){
             List<CommentVo> children = getChildren(comment.getRootId());
             return ResponseResult.okResult(children);
+        }
+        if (SystemConstants.CHECK_ARTICLE == Integer.parseInt(comment.getType())){
+            articleService.update(null,new LambdaUpdateWrapper<Article>()
+                    .eq(Article::getId,comment.getArticleId())
+                    .setSql("`comment_count` = `comment_count` + 1"));
+        }else if(SystemConstants.CHECK_ACTIVITY == Integer.parseInt(comment.getType())){
+            activityContentService.update(null,new LambdaUpdateWrapper<ActivityContent>()
+                    .eq(ActivityContent::getId,comment.getArticleId())
+                    .setSql("`comment_count` = `comment_count` + 1"));
         }
         return ResponseResult.okResult();
     }

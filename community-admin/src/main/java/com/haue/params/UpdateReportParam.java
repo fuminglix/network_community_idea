@@ -13,9 +13,10 @@ public class UpdateReportParam {
 
     @NotNull
     private Long id;
-    //举报分类名
+    //处理结果标志（0代表举报失败，1代表举报成功，2代表未处理）
     @NotNull
     private Integer repFlag;
-    //举报描述
+    private Long update_by;
+    //结果描述
     private String reportResult;
 }

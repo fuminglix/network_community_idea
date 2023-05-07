@@ -111,135 +111,90 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="回答id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="回答内容" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="content" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被回答问题id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="questionId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="被回答问题描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="questionContent" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="缩略图" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="thumbnail" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="状态（0已发布，1草稿 2 审核中 3 未通过）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="status" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="转发数" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="relayCount" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="点赞数" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="loveCount" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="评论数" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="commentCount" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="是否允许评论 1是，0否" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="isComment" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="文章类型（0 原创 1 转载）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="articleType" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="匿名发布（0 匿名 1 不匿名）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="anonymous" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="回答人id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="回答时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="删除标志（0代表未删除，1代表已删除）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="delFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
@@ -747,54 +702,36 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="问题id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="问题描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="title" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="详细描述" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="content" />
                     <option name="type" value="java.lang.String" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="发布用户id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createBy" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="发布时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="删除标志（0代表未删除，1代表已删除）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="delFlag" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
@@ -817,18 +754,12 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="问题id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="questionId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="回答id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="answerId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
@@ -1633,6 +1564,67 @@
                 </list>
               </option>
               <option name="name" value="SysRoleMenu" />
+              <option name="preName" value="sys_" />
+              <option name="saveModelName" value="community-admin" />
+              <option name="savePackageName" value="com.haue" />
+              <option name="savePath" value="./community-admin/src/main/java/com/haue" />
+              <option name="templateGroupName" value="MybatisPlus" />
+            </TableInfoDTO>
+          </value>
+        </entry>
+        <entry key="network_community.sys_user_reputation_record">
+          <value>
+            <TableInfoDTO>
+              <option name="fullColumn">
+                <list>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="用户信誉度修改记录id" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="id" />
+                    <option name="type" value="java.lang.Long" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="用户id" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="userId" />
+                    <option name="type" value="java.lang.Long" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="本次修改的数值（正负）" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="updateScore" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="修改时间" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="createTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="修改后的值" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="afterReputation" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                </list>
+              </option>
+              <option name="name" value="SysUserReputationRecord" />
               <option name="preName" value="sys_" />
               <option name="saveModelName" value="community-admin" />
               <option name="savePackageName" value="com.haue" />

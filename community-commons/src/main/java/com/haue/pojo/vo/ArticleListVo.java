@@ -50,6 +50,10 @@ public class ArticleListVo {
      */
     private Long loveCount;
     /**
+     * 评论数
+     */
+    private Long commentCount;
+    /**
      * 文章创建者
      */
     private Long createBy;

@@ -1,5 +1,6 @@
 package com.haue.controller;
 
+import com.haue.params.AddReportParam;
 import com.haue.params.ReportParam;
 import com.haue.params.UpdateReportParam;
 import com.haue.service.ReportService;
@@ -17,6 +18,11 @@ public class ReportController {
 
     @Autowired
     private ReportService reportService;
+
+    @PostMapping
+    public ResponseResult addReport(@RequestBody AddReportParam param){
+        return reportService.addReport(param);
+    }
 
     @GetMapping("/article/list")
     public ResponseResult getArticleList(ReportParam param){

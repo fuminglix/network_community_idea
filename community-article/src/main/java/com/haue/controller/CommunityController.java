@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/community")
 @Validated
+// TODO: 社区活跃度更新
 public class CommunityController {
 
     @Autowired

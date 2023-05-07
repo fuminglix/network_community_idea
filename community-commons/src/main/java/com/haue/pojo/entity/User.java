@@ -54,6 +54,8 @@ public class User implements Serializable {
     private String backgroundImg;
     //出生日期
     private Date birthday;
+    //信誉度
+    private Integer reputation;
     //创建人的用户id
     @TableField(fill = FieldFill.INSERT)
     private Long createBy;

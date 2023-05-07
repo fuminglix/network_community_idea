@@ -41,6 +41,7 @@ public class Report implements Serializable {
     //被举报用户id
     private Long reportedId;
     //举报人
+    @TableField(fill = FieldFill.INSERT)
     private Long createBy;
     //举报分类id
     private Integer reportCategory;
@@ -50,7 +51,6 @@ public class Report implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     //处理人
-    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateBy;
     //处理时间
     @TableField(fill = FieldFill.INSERT_UPDATE)

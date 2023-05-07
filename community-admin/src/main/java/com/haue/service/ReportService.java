@@ -1,6 +1,7 @@
 package com.haue.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.haue.params.AddReportParam;
 import com.haue.params.ReportParam;
 import com.haue.params.UpdateReportParam;
 import com.haue.pojo.entity.Report;
@@ -28,4 +29,6 @@ public interface ReportService extends IService<Report> {
     ResponseResult getActivityList(ReportParam param);
 
     ResponseResult getActivity(Long id);
+
+    ResponseResult addReport(AddReportParam param);
 }
