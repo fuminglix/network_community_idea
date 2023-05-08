@@ -8,10 +8,7 @@ import com.haue.constants.SystemConstants;
 import com.haue.mapper.ArticleMapper;
 import com.haue.mapper.ArticleTagMapper;
 import com.haue.mapper.TagMapper;
-import com.haue.pojo.entity.Article;
-import com.haue.pojo.entity.ArticleTag;
-import com.haue.pojo.entity.CheckResult;
-import com.haue.pojo.entity.Tag;
+import com.haue.pojo.entity.*;
 import com.haue.pojo.params.ArticleParam;
 import com.haue.pojo.params.GetMyArticleParam;
 import com.haue.pojo.params.SearchArticleParam;
@@ -56,6 +53,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private CheckResultService checkResultService;
+
     /**
      * 获取文章信息
      * @param pageNum
