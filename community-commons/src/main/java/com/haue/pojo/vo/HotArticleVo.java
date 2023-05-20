@@ -20,6 +20,7 @@ public class HotArticleVo {
      * 访问量
      */
     private Long viewCount;
+    private Long createBy;
 
 
 }

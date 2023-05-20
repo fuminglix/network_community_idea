@@ -5,6 +5,7 @@ import com.haue.enums.AppHttpCodeEnum;
 import com.haue.pojo.entity.Comment;
 import com.haue.pojo.params.AddCommentParam;
 import com.haue.pojo.params.GetCommentParam;
+import com.haue.pojo.params.LoveParam;
 import com.haue.service.CommentService;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
@@ -40,5 +41,20 @@ public class CommentController {
     public ResponseResult addComment(@RequestBody AddCommentParam addCommentParam){
         Comment comment = BeanCopyUtils.copyBean(addCommentParam, Comment.class);
         return commentService.addComment(comment);
+    }
+
+    @GetMapping("/reply")
+    public ResponseResult getReply(){
+        return commentService.getReply();
+    }
+
+    @GetMapping("/love")
+    public ResponseResult getLove(){
+        return commentService.getLove();
+    }
+
+    @PutMapping("/love")
+    public ResponseResult updateLove(@RequestBody LoveParam param){
+        return commentService.updateLove(param);
     }
 }

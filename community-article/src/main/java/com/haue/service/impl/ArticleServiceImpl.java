@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haue.constants.SystemConstants;
+import com.haue.enums.AppHttpCodeEnum;
 import com.haue.mapper.ArticleMapper;
 import com.haue.mapper.ArticleTagMapper;
 import com.haue.mapper.TagMapper;
@@ -53,6 +54,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private CheckResultService checkResultService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取文章信息
@@ -132,6 +136,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional
     public ResponseResult addArticle(ArticleParam articleParam) {
+        Integer reputation = userService.getById(SecurityUtils.getUserId()).getReputation();
+        if (reputation <= SystemConstants.DEFAULT_REPUTATION){
+            return ResponseResult.errorResult(AppHttpCodeEnum.REPUTATION_LOW);
+        }
         Article article = BeanCopyUtils.copyBean(articleParam, Article.class);
         save(article); //保存文章
         //审核内容

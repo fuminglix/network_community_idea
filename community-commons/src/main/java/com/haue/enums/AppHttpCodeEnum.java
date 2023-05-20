@@ -30,7 +30,8 @@ public enum AppHttpCodeEnum {
     USERNAME_NOT_EXIST(521,"用户名不存在"),
 
     USERNAME_DISABLE(522,"用户名已被禁用"),
-    CHECK_FAIL(600,"当前审核人数较多，请稍后再尝试上传");
+    CHECK_FAIL(600,"当前审核人数较多，请稍后再尝试上传"),
+    REPUTATION_LOW(601,"您的信誉值过低，已被限制发布内容！请规范自己的言行！");
     int code;
     String msg;
 

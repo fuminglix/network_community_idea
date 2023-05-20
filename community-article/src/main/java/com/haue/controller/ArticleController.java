@@ -142,4 +142,5 @@ public class ArticleController {
     public ResponseResult getArticleList(){
         return articleService.getArticleList();
     }
+
 }

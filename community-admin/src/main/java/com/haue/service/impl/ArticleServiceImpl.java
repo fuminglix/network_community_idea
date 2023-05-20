@@ -55,7 +55,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Article article = BeanCopyUtils.copyBean(articleDto, Article.class);
 //        向article表中添加博文
         save(article);
-
         List<ArticleTag> articleTagList = articleDto.getTags().stream()
                 .map(tagId -> new ArticleTag(article.getId(), tagId))
                 .collect(Collectors.toList());

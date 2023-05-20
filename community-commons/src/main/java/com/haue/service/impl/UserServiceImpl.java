@@ -99,10 +99,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         wrapper.eq(RegardFansTotal::getId,id);
         Page<RegardFansTotal> page = new Page<>(SystemConstants.DEFAULT_PAGE_NUM, SystemConstants.DEFAULT_PAGE_SIZE);
         regardFansTotalService.page(page,wrapper);
-        List<User> userList = listByIds(page.getRecords().stream().map(RegardFansTotal::getRegardId).collect(Collectors.toList()));
-        //封装结果并返回
-        UserActivityInfoVo userActivityInfoVo = new UserActivityInfoVo(BeanCopyUtils.copyBean(user, AuthorInfoVo.class).setUserTotal(userTotalService.getById(id)),
-                new PageVo(BeanCopyUtils.copyBeanList(userList, UserActivityRegardListVo.class),page.getTotal()));
+        UserActivityInfoVo userActivityInfoVo = new UserActivityInfoVo();
+        List<User> userList = new ArrayList<>();
+        if (page.getTotal() > 0){
+            userList = listByIds(page.getRecords().stream().map(RegardFansTotal::getRegardId).collect(Collectors.toList()));
+            //封装结果并返回
+            userActivityInfoVo.setPageVo(new PageVo(BeanCopyUtils.copyBeanList(userList, UserActivityRegardListVo.class),page.getTotal()));
+        }
+        userActivityInfoVo.setAuthorInfoVo(BeanCopyUtils.copyBean(user, AuthorInfoVo.class).setUserTotal(userTotalService.getById(id)));
         return ResponseResult.okResult(userActivityInfoVo);
     }
 

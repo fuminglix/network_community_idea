@@ -37,4 +37,5 @@ public class CommentVo {
     private String avatar;
     //子评论
     private List<CommentVo> children;
+    private String summary;
 }

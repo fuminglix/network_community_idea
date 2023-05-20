@@ -694,6 +694,67 @@
             </TableInfoDTO>
           </value>
         </entry>
+        <entry key="network_community.nc_love_record">
+          <value>
+            <TableInfoDTO>
+              <option name="fullColumn">
+                <list>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="点赞记录id" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="id" />
+                    <option name="type" value="java.lang.Long" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="点赞内容id" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="contentId" />
+                    <option name="type" value="java.lang.Long" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="点赞内容类型（0 文章，1内容）" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="type" />
+                    <option name="type" value="java.lang.Integer" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="点赞人" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="createBy" />
+                    <option name="type" value="java.lang.Long" />
+                  </ColumnInfoDTO>
+                  <ColumnInfoDTO>
+                    <option name="comment" value="点赞时间" />
+                    <option name="custom" value="false" />
+                    <option name="ext">
+                      <map />
+                    </option>
+                    <option name="name" value="createTime" />
+                    <option name="type" value="java.util.Date" />
+                  </ColumnInfoDTO>
+                </list>
+              </option>
+              <option name="name" value="NcLoveRecord" />
+              <option name="preName" value="nc_" />
+              <option name="saveModelName" value="community-admin" />
+              <option name="savePackageName" value="com.haue" />
+              <option name="savePath" value="./community-admin/src/main/java/com/haue" />
+              <option name="templateGroupName" value="MybatisPlus" />
+            </TableInfoDTO>
+          </value>
+        </entry>
         <entry key="network_community.nc_question">
           <value>
             <TableInfoDTO>
@@ -1580,45 +1641,30 @@
                   <ColumnInfoDTO>
                     <option name="comment" value="用户信誉度修改记录id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="id" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="用户id" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="userId" />
                     <option name="type" value="java.lang.Long" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="本次修改的数值（正负）" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="updateScore" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="修改时间" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="createTime" />
                     <option name="type" value="java.util.Date" />
                   </ColumnInfoDTO>
                   <ColumnInfoDTO>
                     <option name="comment" value="修改后的值" />
                     <option name="custom" value="false" />
-                    <option name="ext">
-                      <map />
-                    </option>
                     <option name="name" value="afterReputation" />
                     <option name="type" value="java.lang.Integer" />
                   </ColumnInfoDTO>

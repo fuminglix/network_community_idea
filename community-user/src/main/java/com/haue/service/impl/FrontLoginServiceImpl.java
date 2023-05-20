@@ -1,17 +1,18 @@
 package com.haue.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.haue.constants.SystemConstants;
 import com.haue.enums.AppHttpCodeEnum;
 import com.haue.exception.SystemException;
+import com.haue.pojo.entity.User;
 import com.haue.pojo.params.UserCheckParam;
 import com.haue.pojo.entity.LoginUser;
+import com.haue.pojo.params.UserParam;
 import com.haue.pojo.vo.BlogUserLoginVo;
 import com.haue.pojo.vo.UserInfoVo;
 import com.haue.service.FrontLoginService;
-import com.haue.utils.BeanCopyUtils;
-import com.haue.utils.JwtUtil;
-import com.haue.utils.RedisCache;
-import com.haue.utils.ResponseResult;
+import com.haue.service.UserService;
+import com.haue.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +31,9 @@ public class FrontLoginServiceImpl implements FrontLoginService {
     private RedisCache redisCache;
 
     private LoginUser loginUser;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 前端用户登录
@@ -85,5 +89,30 @@ public class FrontLoginServiceImpl implements FrontLoginService {
         redisCache.deleteObject(SystemConstants.REDIS_LOGIN_KEY + userId);
         loginUser = null;
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 修改用户信息
+     * @param userParam
+     * @return
+     */
+    @Override
+    public ResponseResult updateUser(UserParam userParam) {
+        Long userId = SecurityUtils.getUserId();
+        User user = BeanCopyUtils.copyBean(userParam, User.class);
+        user.setId(userId);
+        userService.updateById(user);
+        return ResponseResult.okResult();
+    }
+
+    /**
+     * 获取当前用户信息
+     * @return
+     */
+    @Override
+    public ResponseResult getUserInfo() {
+        Long userId = SecurityUtils.getUserId();
+        User user = userService.getById(userId);
+        return ResponseResult.okResult(user);
     }
 }

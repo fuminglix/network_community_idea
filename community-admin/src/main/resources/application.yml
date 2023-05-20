@@ -8,7 +8,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
     #Redis服务器地址
-    host: 123.57.239.63
+    host: 192.168.75.201
     #Redis服务器连接端口
     port: 6379
     #Redis数据库索引（默认位0）

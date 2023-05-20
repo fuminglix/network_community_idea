@@ -8,19 +8,14 @@ import com.haue.constants.SystemConstants;
 import com.haue.enums.AppHttpCodeEnum;
 import com.haue.exception.SystemException;
 import com.haue.mapper.CommentMapper;
-import com.haue.pojo.entity.ActivityContent;
-import com.haue.pojo.entity.Article;
-import com.haue.pojo.entity.Comment;
-import com.haue.pojo.entity.User;
+import com.haue.pojo.entity.*;
 import com.haue.pojo.params.GetCommentParam;
-import com.haue.pojo.vo.CommentVo;
-import com.haue.pojo.vo.PageVo;
-import com.haue.service.ActivityContentService;
-import com.haue.service.ArticleService;
-import com.haue.service.CommentService;
-import com.haue.service.UserService;
+import com.haue.pojo.params.LoveParam;
+import com.haue.pojo.vo.*;
+import com.haue.service.*;
 import com.haue.utils.BeanCopyUtils;
 import com.haue.utils.ResponseResult;
+import com.haue.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +42,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private ActivityContentService activityContentService;
 
+    @Autowired
+    private LoveRecordService loveRecordService;
+
 //    @Override
 //    public ResponseResult commentList(String commentType, Long articleId, Integer pageNum, Integer pageSize) {
 //        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
@@ -67,11 +65,36 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 //    }
     @Override
     public ResponseResult commentList(GetCommentParam commentParam) {
+        if (commentParam.getArticleId() < 0){
+            Long userId = SecurityUtils.getUserId();
+            LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Article::getCreateBy,userId);
+            List<Article> list = articleService.list(wrapper);
+            if (list.size() > 0){
+                List<Long> collect = list.stream().map(Article::getId)
+                        .distinct()
+                        .collect(Collectors.toList());
+                LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.in(Comment::getArticleId,collect)
+                        .eq(Comment::getType,SystemConstants.ARTICLE_STATUS_NORMAL)
+                        .orderByDesc(Comment::getCreateTime);
+//                List<Comment> comments = list(queryWrapper);
+                Page<Comment> page = new Page<>(commentParam.getPageNum(), commentParam.getPageSize());
+                page(page,queryWrapper);
+                List<CommentVo> commentVoList =  toCommentVoList(page.getRecords());
+
+                //查询子评论，将查询结果封装到commentVoList中的Children属性中
+                commentVoList.forEach(commentVo -> {
+                    commentVo.setSummary(articleService.getById(commentVo.getArticleId()).getSummary());
+                });
+                return ResponseResult.okResult(new PageVo(commentVoList,page.getTotal()));
+            }
+        }
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getArticleId,commentParam.getArticleId())
                 .eq(Comment::getRootId,-1)
                 .eq(Comment::getType,commentParam.getType())
-                .orderByAsc(Comment::getCreateTime);
+                .orderByDesc(Comment::getCreateTime);
 
         Page<Comment> page = new Page<>(commentParam.getPageNum(),commentParam.getPageSize());
         page(page,queryWrapper);
@@ -87,13 +110,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     @Transactional
     public ResponseResult addComment(Comment comment) {
+        Integer reputation = userService.getById(SecurityUtils.getUserId()).getReputation();
+        if (reputation <= SystemConstants.DEFAULT_REPUTATION){
+            return ResponseResult.errorResult(AppHttpCodeEnum.REPUTATION_LOW);
+        }
         if (!StringUtils.hasText(comment.getContent())){
             throw new SystemException(AppHttpCodeEnum.CONTENT_NOT_NULL);
         }
         save(comment);
+        List<CommentVo> children = null;
         if (comment.getRootId() != -1){
-            List<CommentVo> children = getChildren(comment.getRootId());
-            return ResponseResult.okResult(children);
+            children = getChildren(comment.getRootId());
+//            return ResponseResult.okResult(children);
         }
         if (SystemConstants.CHECK_ARTICLE == Integer.parseInt(comment.getType())){
             articleService.update(null,new LambdaUpdateWrapper<Article>()
@@ -103,6 +131,71 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             activityContentService.update(null,new LambdaUpdateWrapper<ActivityContent>()
                     .eq(ActivityContent::getId,comment.getArticleId())
                     .setSql("`comment_count` = `comment_count` + 1"));
+        }
+        return ResponseResult.okResult(children);
+    }
+
+    /**
+     * 获取回复当前用户的所有评论
+     * @return
+     */
+    @Override
+    public ResponseResult getReply() {
+        Long userId = SecurityUtils.getUserId();
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getToCommentUserId,userId)
+                .orderByDesc(Comment::getCreateTime);
+        List<Comment> comments = list(wrapper);
+        List<ReplyVo> vos = BeanCopyUtils.copyBeanList(comments, ReplyVo.class);
+        if (vos.size() > 0){
+            vos.forEach(replyVo -> {
+                replyVo.setUser(BeanCopyUtils.copyBean(userService.getById(replyVo.getCreateBy()), AuthorInfoVo.class));
+                replyVo.setMyComment(getById(replyVo.getToCommentId()).getContent());
+            });
+        }
+        return ResponseResult.okResult(vos);
+    }
+
+    /**
+     * 获取用户点赞记录
+     * @return
+     */
+    @Override
+    public ResponseResult getLove() {
+        Long userId = SecurityUtils.getUserId();
+        LambdaQueryWrapper<LoveRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(LoveRecord::getContentCreateBy,userId)
+                .orderByDesc(LoveRecord::getCreateTime);
+        List<LoveRecord> loveRecords = loveRecordService.list(wrapper);
+        List<LoveRecordVo> recordVos = null;
+        if (loveRecords.size() > 0){
+            recordVos = BeanCopyUtils.copyBeanList(loveRecords, LoveRecordVo.class);
+            recordVos.forEach(loveRecord -> {
+                loveRecord.setUser(BeanCopyUtils.copyBean(userService.getById(loveRecord.getCreateBy()), AuthorInfoVo.class));
+                if (SystemConstants.CHECK_ARTICLE == loveRecord.getType()){
+                    loveRecord.setContent(articleService.getById(loveRecord.getContentId()).getSummary());
+                } else if (SystemConstants.CHECK_ACTIVITY == loveRecord.getType()) {
+                    loveRecord.setContent(activityContentService.getById(loveRecord.getContentId()).getContent());
+                }
+            });
+        }
+        return ResponseResult.okResult(recordVos);
+    }
+
+    /**
+     * 点赞
+     * @param param
+     * @return
+     */
+    @Override
+    public ResponseResult updateLove(LoveParam param) {
+        articleService.update(null,new LambdaUpdateWrapper<Article>()
+                .eq(Article::getId,param.getContentId())
+                .setSql("`love_count` = `love_count` + 1"));
+        LoveRecord loveRecord = BeanCopyUtils.copyBean(param, LoveRecord.class);
+        boolean b = loveRecordService.save(loveRecord);
+        if (!b){
+            throw new SystemException(AppHttpCodeEnum.SYSTEM_ERROR);
         }
         return ResponseResult.okResult();
     }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.haue.constants.SystemConstants;
+import com.haue.enums.AppHttpCodeEnum;
 import com.haue.mapper.ActivityContentMapper;
 import com.haue.pojo.entity.ActivityContent;
 import com.haue.pojo.entity.Img;
@@ -100,6 +101,10 @@ public class ActivityContentServiceImpl extends ServiceImpl<ActivityContentMappe
     @Override
     @Transactional
     public ResponseResult addActivityContent(AddActivityContentParam activityContentParam) {
+        Integer reputation = userService.getById(SecurityUtils.getUserId()).getReputation();
+        if (reputation <= SystemConstants.DEFAULT_REPUTATION){
+            return ResponseResult.errorResult(AppHttpCodeEnum.REPUTATION_LOW);
+        }
         ActivityContent activityContent = BeanCopyUtils.copyBean(activityContentParam, ActivityContent.class);
         save(activityContent);
 
